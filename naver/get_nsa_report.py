@@ -29,6 +29,7 @@ CUSTOMER_ID = '1158940'
 
 input_file = '/Users/maketing/adDev/DB_for_GA_naver/'
 output_file = '/Users/maketing/adDev/DB_of_naver_combined/'
+campaignList = ['cmp-a001-01-000000003407889', 'cmp-a001-01-000000003407888']
 
 #1. GET Summary Report per multiple entities 
 input_start_date = input('보고 시작 날짜 : ')
@@ -40,43 +41,50 @@ end_date = parse(input_end_date)
 
 #requested data to csv
 def data_to_csv(date) :
+    for v in campaignList :
+        print(v)
+        #stat_ids = []
+        #stat_ids.append(v)
+        uri = '/stats'
+        method = 'GET'
 
-    uri = '/stats'
-    method = 'GET'
-
-    rangeOftime = {"since" : date, "until" : date}
-    json_range_of_time = json.dumps(rangeOftime, indent=2)
+        rangeOftime = {"since" : date, "until" : date}
+        json_range_of_time = json.dumps(rangeOftime, indent=2)
 
     #수정 20201110
-    stat_ids = ['cmp-a001-01-000000003407888']
-    params={
-        'ids': stat_ids,
-        'fields': '["clkCnt","impCnt","salesAmt"]', 
-        'timeRange': json_range_of_time }
+        stat_ids = [v]
+        params={
+            'ids': stat_ids,
+            'fields': '["clkCnt","impCnt","salesAmt"]', 
+            'timeRange': json_range_of_time }
+    
+    
+        #request API
+        r = requests.get(BASE_URL + uri, params, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
+        #print("response status_code = {}".format(r.status_code))
+        #print("response body = {}".format(r.json()))
 
-    #request API
-    r = requests.get(BASE_URL + uri, params, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+        json_data = json.loads(r.text)
+        data = json_data['data'][0]
+        print(data)
+        striped_date = date.replace('-','')
+        medium = 'cpc'
+        source = 'search.naver.com'
+        clkCnt = data['clkCnt']
+        impCnt = data['impCnt']
+        salesAmt = data['salesAmt']
+        campaign = 0
+        if(v == 'cmp-a001-01-000000003407889') :
+            campaign = 'NSA_contents'
+        else :
+            campaign = 'NSA'
 
-    #print("response status_code = {}".format(r.status_code))
-    #print("response body = {}".format(r.json()))
+        newRow = [striped_date, medium, source, clkCnt, salesAmt, impCnt, campaign]
+        ad_data = {'ga:date':[striped_date], 'ga:medium':[medium], 'ga:source':[source], 'ga:adClicks':[clkCnt], 'ga:adCost':[salesAmt], 'ga:impressions':[impCnt], 'ga:campaign':[campaign] }
+        df = pd.DataFrame(data=ad_data)
 
-    json_data = json.loads(r.text)
-    data = json_data['data'][0]
-
-    striped_date = date.replace('-','')
-    medium = 'cpc'
-    source = 'search.naver.com'
-    clkCnt = data['clkCnt']
-    impCnt = data['impCnt']
-    salesAmt = data['salesAmt']
-    campaign = 'NSA'
-
-    newRow = [striped_date, medium, source, clkCnt, salesAmt, impCnt, campaign]
-    ad_data = {'ga:date':[striped_date], 'ga:medium':[medium], 'ga:source':[source], 'ga:adClicks':[clkCnt], 'ga:adCost':[salesAmt], 'ga:impressions':[impCnt], 'ga:campaign':[campaign] }
-    df = pd.DataFrame(data=ad_data)
-
-    df.to_csv(Path(input_file, f'{striped_date} {source}.csv'), index=False)
+        df.to_csv(Path(input_file, f'{striped_date} {source} {campaign}.csv'), index=False)
 
 def merge_csv() : 
     #input_file = '/Users/maketing/adDev/DB_for_GA_naver/'
@@ -107,7 +115,9 @@ def removeAllFile() :
         return 'input 폴더 삭제 완료'
     else :
         return 'input 폴더 에러'
-    
+
+
+
 iterate_request()
 merge_csv()
 removeAllFile()
