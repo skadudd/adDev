@@ -62,7 +62,9 @@ def data_to_csv(date) :
     #print("response body = {}".format(r.json()))
 
     json_data = json.loads(r.text)
+    print(json_data)
     data = json_data['data'][0]
+    print(data)
 
     striped_date = date.replace('-','')
     medium = 'cpc'
@@ -72,7 +74,7 @@ def data_to_csv(date) :
     salesAmt = data['salesAmt']
     campaign = 'NSA'
 
-    newRow = [striped_date, medium, source, clkCnt, salesAmt, impCnt, campaign]
+    #newRow = [striped_date, medium, source, clkCnt, salesAmt, impCnt, campaign]
     ad_data = {'ga:date':[striped_date], 'ga:medium':[medium], 'ga:source':[source], 'ga:adClicks':[clkCnt], 'ga:adCost':[salesAmt], 'ga:impressions':[impCnt], 'ga:campaign':[campaign] }
     df = pd.DataFrame(data=ad_data)
 
