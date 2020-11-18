@@ -2,16 +2,21 @@ import time
 import random
 import requests
 import json
+from pathlib import Path
 from datetime import date
-
-import signaturehelper
-
+import numpy as np
+import re
 import pandas as pd
 from pandas import DataFrame
 
+import signaturehelper
+
+
 today = date.today()
-montly_kwd_performance = '/Users/maketing/adDev/NSA_rel_keyword/montly_performance_raw_data'
-request_query_path = '/Users/maketing/adDev/NSA_rel_keyword/'
+#montly_kwd_performance = '/Users/maketing/adDev/NSA_rel_keyword/montly_performance_raw_data'
+#request_query_path = '/Users/maketing/adDev/NSA_rel_keyword/'
+montly_kwd_performance = '../NSA_rel_keyword/monthly_performance_raw_data'
+request_query_path = '../NSA_rel_keyword/'
 
 
 def get_header(method, uri, api_key, secret_key, customer_id):
@@ -77,11 +82,11 @@ CUSTOMER_ID = '1158940'
 # print("response body = {}".format(r.json()))
 
 def get_query():
-    df = pd.read_csv('/Users/maketing/adDev/NSA_rel_keyword/filtered_query.csv',header=None)
+    df = pd.read_csv('../NSA_rel_keyword/filtered_query.csv',header=None)
     return df
 
 
-def sample_data_set(query):
+def sample_data_set(query,num):
     len_of_query = len(query.index) - 1
     list_of_data_set = []
     data_set = []
@@ -89,7 +94,7 @@ def sample_data_set(query):
     for i in range(len_of_query):
         i += 1
         kwd = query[0][i]
-        kwd_set = dict(key = kwd, position = 1)
+        kwd_set = dict(key = kwd, position = num)
         data_set.append(kwd_set)
         #print(len(data_set))
         if len(data_set) == 200 :
@@ -128,20 +133,15 @@ def request_estimate(data):
     
     return df_list
 
-
-def merge_df(data):
-    #데이터프레임 혼합. 2가지 case.
-    #200개 초과한 동일한 순위 데이터 종적 혼합.
-    #순위 데이터프레임 마다 각자 혼합된 데이터셋 존재.
-    #각 데이터프레임 횡적 혼합.
-    print(len(data))
-    a = data[0]
-    b = data[1]
-    print(pd.merge(a,b,on='keyword'))
-    #print(a)
-    #print(a.merge(b))
+def concat_df(data):
     
-
+    frames = []
+    print(data)
+    
+    #frames = [data[0], data[1]]
+    #result = pd.concat(frames)
+    #print(result)
+    
 
 # def write_csv():
 #     df = pd.DataFrame.from_dict(json_data['keywordList'])
@@ -149,9 +149,17 @@ def merge_df(data):
 
 def init() :
     query = get_query()
-    data = sample_data_set(query)
-    list_of_dataframe = request_estimate(data)
-    merge_df(list_of_dataframe)
+    for i in range(3):
+        i += 1
+        data = sample_data_set(query,i)
+        list_of_dataframe = request_estimate(data)
+        concat_df(list_of_dataframe)
+        time.sleep(10)
+
+    
+    
+    
+    #list_of_dataframe[1].to_csv(Path(monthly_kwd_performance, f'{today}_머지.csv'), index=False)
     
     #write_csv()
     #merge_csv()
