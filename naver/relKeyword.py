@@ -44,6 +44,7 @@ def get_data(kwd):
     df = pd.DataFrame.from_dict(json_data['keywordList'])
     df.to_csv(Path(montly_data, f'{today}_{kwd}_네이버검색광고_키워드.csv'), index=False)
 
+
 def init():
     query = get_query()
     len_of_query = len(query.index) - 1
