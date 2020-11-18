@@ -162,7 +162,7 @@ r = requests.get(BASE_URL + uri, params={'type': 'MYCLIENTS'}, headers=get_heade
 
 uri = '/estimate/average-position-bid/keyword'
 method = 'POST'
-r = requests.post(BASE_URL + uri, json={'device': 'PC', 'items': [{'key': '제주여행', 'position': 1}, {'key': '게스트하우스', 'position': 2}, {'key': '자전거여행', 'position': 3}]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+r = requests.post(BASE_URL + uri, json={'device': 'PC', 'items': [{'key': '금속가공', 'position': 7}, {'key': '중고차', 'position': 7}, {'key': '자전거여행', 'position': 9}]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 print("#response status_code = {}".format(r.status_code))
 print("#response body = {}".format(r.json()))
@@ -172,19 +172,19 @@ print("#response body = {}".format(r.json()))
 
 # uri = '/estimate/exposure-minimum-bid/keyword'
 # method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['제주여행', '게시트하우스', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['제주여행', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 # print("response status_code = {}".format(r.status_code))
 # print("response body = {}".format(r.json()))
 
-# # 3. median-bid
+# 3. median-bid
 
-# uri = '/estimate/median-bid/keyword'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['제주여행', '게시트하우스', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+uri = '/estimate/median-bid/keyword'
+method = 'POST'
+r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['금속가공', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
+print("response status_code = {}".format(r.status_code))
+print("response body = {}".format(r.json()))
 
 
 # # 4. performance

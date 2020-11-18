@@ -9,7 +9,7 @@ from pandas import DataFrame
 from datetime import date
 from pathlib import Path
 import csv
-import time
+
 
 BASE_URL = 'https://api.naver.com'
 API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
@@ -29,9 +29,7 @@ def get_query():
     df = pd.read_csv('/Users/maketing/adDev/NSA_rel_keyword/query.csv',header=None)
     return df
     # len_of_query = len(df.index)
-    # print(df[0][1])
-
-    
+    # print(df[0][1])  
 
 def get_data(kwd):
     uri = '/keywordstool'
@@ -39,7 +37,7 @@ def get_data(kwd):
     params = {'hintKeywords': kwd, 'showDetail' : 1}
     print(1,kwd)
     r = requests.get(BASE_URL + uri, params=params, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-    # print("response status_code = {}".format(r.status_code))
+    print("response status_code = {}".format(r.status_code))
     # print("response body = {}".format(r.json()))
     json_data = json.loads(r.text)
 
@@ -60,13 +58,7 @@ def init():
     
     
     #write_csv()
-
     #merge_csv()
     #clear_dir()
-    
-
-
-#simple_df = DataFrame(result['keywordList'])
-#print(simple_df)
 
 init()
