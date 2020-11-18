@@ -9,6 +9,7 @@ from pandas import DataFrame
 from datetime import date
 from pathlib import Path
 import csv
+import time
 
 BASE_URL = 'https://api.naver.com'
 API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
@@ -41,10 +42,9 @@ def get_data(kwd):
     # print("response status_code = {}".format(r.status_code))
     # print("response body = {}".format(r.json()))
     json_data = json.loads(r.text)
-    print(json_data)
 
-    # df = pd.DataFrame.from_dict(json_data['keywordList'])
-    # df.to_csv(Path(montly_data, f'{today}_{kwd}_네이버검색광고_키워드.csv'), index=False)
+    df = pd.DataFrame.from_dict(json_data['keywordList'])
+    df.to_csv(Path(montly_data, f'{today}_{kwd}_네이버검색광고_키워드.csv'), index=False)
 
 def init():
     query = get_query()
@@ -55,6 +55,7 @@ def init():
         kwd = query[0][i]
         print(kwd)
         #print(query[0][i])
+        time.sleep(10)
         get_data(kwd)
     
     
