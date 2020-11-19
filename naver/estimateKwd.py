@@ -13,10 +13,10 @@ import signaturehelper
 
 
 today = date.today()
-#montly_kwd_performance = '/Users/maketing/adDev/NSA_rel_keyword/montly_performance_raw_data'
-#request_query_path = '/Users/maketing/adDev/NSA_rel_keyword/'
-montly_kwd_performance = '../NSA_rel_keyword/monthly_performance_raw_data'
-request_query_path = '../NSA_rel_keyword/'
+
+monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
+request_query_path = '/Users/maketing/adDev/NSA_rel_keyword/'
+query_path = '/Users/maketing/adDev/NSA_rel_keyword/filtered_query.csv'
 
 
 def get_header(method, uri, api_key, secret_key, customer_id):
@@ -82,7 +82,7 @@ CUSTOMER_ID = '1158940'
 # print("response body = {}".format(r.json()))
 
 def get_query():
-    df = pd.read_csv('../NSA_rel_keyword/filtered_query.csv',header=None)
+    df = pd.read_csv(query_path,header=None)
     return df
 
 
@@ -134,13 +134,13 @@ def request_estimate(data):
     return df_list
 
 def concat_df(data):
-    
     frames = []
-    print(data)
-    
-    #frames = [data[0], data[1]]
-    #result = pd.concat(frames)
-    #print(result)
+    for i in range(len(data)):
+        frames.append(data[i])
+    result = pd.concat(frames)
+    return result
+
+    #result = pd.concat([df1, df4], axis=1, sort=False)
     
 
 # def write_csv():
@@ -148,18 +148,19 @@ def concat_df(data):
 #     df.to_csv(Path(montly_data, f'{today}_{kwd}_네이버검색광고_키워드.csv'), index=False)
 
 def init() :
+    DB = []
     query = get_query()
     for i in range(3):
         i += 1
         data = sample_data_set(query,i)
         list_of_dataframe = request_estimate(data)
-        concat_df(list_of_dataframe)
+        distributed_df = concat_df(list_of_dataframe)
+        DB.append(distributed_df)
         time.sleep(10)
-
-    
-    
-    
-    #list_of_dataframe[1].to_csv(Path(monthly_kwd_performance, f'{today}_머지.csv'), index=False)
+    print(DB)
+    DB[0].to_csv(Path(monthly_performance_path, f'{today}_1.csv'), index=False)
+    DB[1].to_csv(Path(monthly_performance_path, f'{today}_2.csv'), index=False)
+    DB[2].to_csv(Path(monthly_performance_path, f'{today}_3.csv'), index=False)
     
     #write_csv()
     #merge_csv()
