@@ -8,14 +8,13 @@ import numpy as np
 import re
 import pandas as pd
 from pandas import DataFrame
-
+from functools import reduce
 import signaturehelper
 
 
 today = date.today()
 
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-request_query_path = '/Users/maketing/adDev/NSA_rel_keyword/'
 query_path = '/Users/maketing/adDev/NSA_rel_keyword/filtered_query.csv'
 
 
@@ -123,49 +122,56 @@ def get_data(kwd):
 
     return df
 
-def request_estimate(data):
+def request_estimate(data,i):
+    bid_and_position = 'bidding' + ' ' + str(i) + 'st '
     df_list = []
     len_of_list_of_data_set = len(data)
 
     for i in range(len_of_list_of_data_set):
         df = get_data(data[i])
-        df_list.append(df)
+        sorted_df = handle_column(df,bid_and_position)
+        df_list.append(sorted_df)
     
     return df_list
+
+def handle_column(df,bid_and_position) :
+    df.columns = [bid_and_position,'keyword','position']
+    del df['position']
+    df = df[['keyword',bid_and_position]]
+
+    return df
 
 def concat_df(data):
     frames = []
     for i in range(len(data)):
         frames.append(data[i])
     result = pd.concat(frames)
+
     return result
 
-    #result = pd.concat([df1, df4], axis=1, sort=False)
-    
+def merge_df(data):
+    df_merged = reduce(lambda left,right: pd.merge(left,right,on=['keyword']), data)
+    #print(df_merged)
+    return df_merged
 
-# def write_csv():
-#     df = pd.DataFrame.from_dict(json_data['keywordList'])
-#     df.to_csv(Path(montly_data, f'{today}_{kwd}_네이버검색광고_키워드.csv'), index=False)
+def write_csv(data,kwd):
+    data.to_csv(Path(monthly_performance_path, f'{today.year}{today.month}_{kwd}_구좌순위별_비딩가.csv'), index=False)
 
 def init() :
     DB = []
     query = get_query()
-    for i in range(3):
+    main_kwd = query[0][1]
+
+    for i in range(10):
         i += 1
         data = sample_data_set(query,i)
-        list_of_dataframe = request_estimate(data)
+        list_of_dataframe = request_estimate(data,i)
         distributed_df = concat_df(list_of_dataframe)
         DB.append(distributed_df)
-        time.sleep(10)
-    print(DB)
-    DB[0].to_csv(Path(monthly_performance_path, f'{today}_1.csv'), index=False)
-    DB[1].to_csv(Path(monthly_performance_path, f'{today}_2.csv'), index=False)
-    DB[2].to_csv(Path(monthly_performance_path, f'{today}_3.csv'), index=False)
+        time.sleep(5)
     
-    #write_csv()
-    #merge_csv()
-    #clear_dir()
-
+    df_of_bid = merge_df(DB)
+    write_csv(df_of_bid,main_kwd)
 
 init()
 
