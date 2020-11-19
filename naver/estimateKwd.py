@@ -32,15 +32,6 @@ CUSTOMER_ID = '1158940'
 
 # # Estimate Usage Sample
 
-# # 1. average-position-bid
-# ## items : The maximum of 200 keys can be requested at once.
-# uri = '/estimate/average-position-bid/keyword'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'items': [{'key': '금속가공', 'position': 7}, {'key': '중고차', 'position': 7}, {'key': '자전거여행', 'position': 9}]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-
-# print("#response status_code = {}".format(r.status_code))
-# print("#response body = {}".format(r.json()))
-
 # # 5. performance-bulk
 # #items : The maximum of 200 items can be requested at once.
 
@@ -58,15 +49,6 @@ CUSTOMER_ID = '1158940'
 # method = 'POST'
 # r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['제주여행', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 # # 
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
-
-# # 3. median-bid
-# ## items : The maximum of 200 keys can be requested at once.
-# uri = '/estimate/median-bid/keyword'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['금속가공', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-
 # print("response status_code = {}".format(r.status_code))
 # print("response body = {}".format(r.json()))
 
@@ -119,6 +101,7 @@ def get_data(kwd):
     #print("#response body = {}".format(r.json()))
     json_data = json.loads(r.text)
     df = pd.DataFrame.from_dict(json_data['estimate'])
+    print(df)
 
     return df
 
@@ -174,8 +157,3 @@ def init() :
     write_csv(df_of_bid,main_kwd)
 
 init()
-
-
-
-
-
