@@ -101,7 +101,6 @@ def get_data(kwd):
     #print("#response body = {}".format(r.json()))
     json_data = json.loads(r.text)
     df = pd.DataFrame.from_dict(json_data['estimate'])
-    print(df)
 
     return df
 
@@ -138,6 +137,7 @@ def merge_df(data):
     return df_merged
 
 def write_csv(data,kwd):
+    print('write_csv')
     data.to_csv(Path(monthly_performance_path, f'{today.year}{today.month}_{kwd}_구좌순위별_비딩가.csv'), index=False)
 
 def init() :

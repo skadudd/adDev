@@ -31,6 +31,14 @@ def get_query():
     # len_of_query = len(df.index)
     # print(df[0][1])  
 
+# def concat_df(data):
+#     frames = []
+#     for i in range(len(data)):
+#         frames.append(data[i])
+#     result = pd.concat(frames,join="inner")
+
+#     return result
+
 def get_data(kwd):
     uri = '/keywordstool'
     method = 'GET'
@@ -42,10 +50,25 @@ def get_data(kwd):
     json_data = json.loads(r.text)
 
     df = pd.DataFrame.from_dict(json_data['keywordList'])
+    df.columns = ['연관 검색어','PC 월간 검색수','모바일 월간 검색수','PC 월평균 클릭수','모바일 월평균 클릭수','PC 월평균 클릭률','모바일 월평균 클릭율','월평균 노출 광고수','경쟁 정도']
+    df = df[['연관 검색어','PC 월간 검색수','PC 월평균 클릭수','PC 월평균 클릭률','모바일 월간 검색수','모바일 월평균 클릭수','모바일 월평균 클릭율','월평균 노출 광고수','경쟁 정도']]
+    
+    return df
+    
+def write_csv(df,kwd):
     df.to_csv(Path(montly_data, f'{today}_{kwd}_네이버검색광고_키워드.csv'), index=False)
 
+def concat_csv(db):
+    frames = []
+    for i in range(len(db)):
+        frames.append(db[i])
+    result = pd.concat(frames)
+    write_csv(result,'merged')
+    
+    return
 
 def init():
+    db = []
     query = get_query()
     len_of_query = len(query.index) - 1
 
@@ -53,13 +76,10 @@ def init():
         i += 1
         kwd = query[0][i]
         print(kwd)
-        #print(query[0][i])
-        time.sleep(10)
-        get_data(kwd)
-    
-    
-    #write_csv()
-    #merge_csv()
-    #clear_dir()
-
+        time.sleep(5)
+        df = get_data(kwd)
+        #concated_df = concat_df(df)
+        db.append(df)
+        write_csv(df,kwd)
+    concat_csv(db)
 init()
