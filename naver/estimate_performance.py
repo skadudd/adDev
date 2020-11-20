@@ -13,7 +13,9 @@ import signaturehelper
 
 today = date.today()
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '/Users/maketing/adDev/NSA_rel_keyword/filtered_query.csv'
+request_query_file = '/202011_CNC_구좌순위별_비딩가.csv'
+target_dir = '/Users/maketing/adDev/NSA_rel_keyword/estimate_performance'
+
 
 BASE_URL = 'https://api.naver.com'
 API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
@@ -25,10 +27,8 @@ def get_header(method, uri, api_key, secret_key, customer_id):
     signature = signaturehelper.Signature.generate(timestamp, method, uri, SECRET_KEY)
     return {'Content-Type': 'application/json; charset=UTF-8', 'X-Timestamp': timestamp, 'X-API-KEY': API_KEY, 'X-Customer': str(CUSTOMER_ID), 'X-Signature': signature}
 
-
-
 def get_query():
-    df = pd.read_csv(monthly_performance_path + '/202011_CNC_test.csv',header=None)
+    df = pd.read_csv(monthly_performance_path + request_query_file ,header=None)
     return df
 
 def get_rows(query):
@@ -85,6 +85,11 @@ def concat_df(data):
 
     return result
 
+def write_csv(concated_df,kwd):
+    print('here')
+    concated_df.to_csv(Path(target_dir, f'{today.year}{today.month}_{kwd}_구좌순위별_예상실적.csv'), index=False)
+    print(concated_df)
+
 def init() :
     DB = []
     query = get_query()
@@ -92,8 +97,8 @@ def init() :
     kwd_list,row_list = get_rows(query)
     list_of_df = get_data(kwd_list,row_list)
     concated_df = concat_df(list_of_df)
-
-    print(concated_df)
+    write_csv(concated_df,main_kwd)
+    #print(concated_df)
     #print(kwd_list)
     #print(row_values)
 
