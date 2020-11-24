@@ -15,7 +15,7 @@ import signaturehelper
 today = date.today()
 
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '/Users/maketing/adDev/NSA_rel_keyword/filtered_query.csv'
+query_path = '/Users/maketing/adDev/NSA_rel_keyword/filtered_query_목적2.csv'
 
 
 def get_header(method, uri, api_key, secret_key, customer_id):

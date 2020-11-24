@@ -10,8 +10,8 @@ import random
 from itertools import product
 
 today = date.today()
-query = '/Users/maketing/adDev/kwd_combiner/query4.csv'
-path = '/Users/maketing/adDev/kwd_combiner'
+query = '/Users/maketing/adDev/kwd_combiner/query/query6.csv'
+path = '/Users/maketing/adDev/kwd_combiner/created_query'
 
 def get_data():
     df = pd.read_csv(query)
@@ -28,7 +28,7 @@ def kwd_attributer(query):
     one_list = []
     two_list = []
     three_list = []
-    four_list = []
+    #four_list = []
     #five_list = []
 
     for v in query['one'] :
@@ -49,11 +49,11 @@ def kwd_attributer(query):
         else :
             three_list.append(v)
 
-    for v in query['four'] :
-        if nan_finder(v) is False :
-            four_list.append('')
-        else :
-            four_list.append(v)
+    #for v in query['four'] :
+    #    if nan_finder(v) is False :
+    #        four_list.append('')
+    #    else :
+    #        four_list.append(v)
         
     # for v in query['five'] :
     #     if nan_finder(v) is False :
@@ -64,7 +64,7 @@ def kwd_attributer(query):
     db.append(one_list)
     db.append(two_list)
     db.append(three_list)
-    db.append(four_list)
+    #db.append(four_list)
     #db.append(five_list)
 
     return db
