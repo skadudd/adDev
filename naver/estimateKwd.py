@@ -29,39 +29,6 @@ API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4
 SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
-
-# # Estimate Usage Sample
-
-# # 5. performance-bulk
-# #items : The maximum of 200 items can be requested at once.
-
-# uri = '/estimate/performance-bulk'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'items': [{'device': 'PC', 'keywordplus': True, 'keyword': '제주여행', 'bid': 70}, {'device': 'PC', 'keywordplus': True, 'keyword': '제주도', 'bid': 80}, {'device': 'PC', 'keywordplus': True, 'keyword': '제주도맛집', 'bid': 90}, ]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
-
-# # # 2. exposure-minimum-bid
-# ## items : The maximum of 200 keys can be requested at once.
-
-# uri = '/estimate/exposure-minimum-bid/keyword'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['제주여행', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-# # 
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
-
-
-# # 4. performance
-## bids[] : The maximum of 100 bids can be requested at once.
-# uri = '/estimate/performance/keyword'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'keywordplus': True, 'key': '중고차', 'bids': [100, 500, 1000, 1500, 2000, 3000, 5000]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
-
 def get_query():
     df = pd.read_csv(query_path,header=None)
     return df
