@@ -29,3 +29,4 @@ print(len(df3))
 """
 
 df3.to_csv(Path(path, f'{today.year}_{today.month}_{kwd}_그룹키워드.csv'), index=False)
+

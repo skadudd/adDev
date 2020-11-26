@@ -15,7 +15,7 @@ import signaturehelper
 today = date.today()
 
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '/Users/maketing/adDev/NSA_rel_keyword/filtered_query_목적2.csv'
+query_path = '/Users/maketing/adDev/NSA_rel_keyword/2020_11_기계설계_필터된키워드.csv'
 
 
 def get_header(method, uri, api_key, secret_key, customer_id):
@@ -72,7 +72,7 @@ def get_data(kwd):
     return df
 
 def request_estimate(data,i):
-    bid_and_position = 'bidding' + ' ' + str(i) + 'st '
+    bid_and_position = 'bidding' + str(i) + 'st '
     df_list = []
     len_of_list_of_data_set = len(data)
 
@@ -100,7 +100,6 @@ def concat_df(data):
 
 def merge_df(data):
     df_merged = reduce(lambda left,right: pd.merge(left,right,on=['keyword']), data)
-    #print(df_merged)
     return df_merged
 
 def write_csv(data,kwd):
@@ -119,7 +118,6 @@ def init() :
         distributed_df = concat_df(list_of_dataframe)
         DB.append(distributed_df)
         time.sleep(5)
-    
     df_of_bid = merge_df(DB)
     write_csv(df_of_bid,main_kwd)
 
