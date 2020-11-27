@@ -47,14 +47,42 @@ def get_rows(query):
 
     return list_of_kwds,list_of_rows
 
-def imp_cal(df):
-    num = [9,8,7,6,5,4,3,2,1]
-    for v in num :
-        s = v - 1
-        asdf = df['impressions'][s] - df['impressions'][v]
-        
-        print(asdf)
-   # print(df['keyword'][9])
+
+def momentom_cal(df):
+    names = ['bid','impressions','clicks']
+    bbb = []
+    for name in names:
+        aaa = []
+        #print(df)
+        col_name = name
+        arr = []
+        imp_momentom_per = []
+        imp_range_of_fuc = []
+        for v in range(len(df)):
+            arr.append(df[col_name][v])
+
+        for v in range(len(arr)):
+            
+            imp_momentom_per.append((arr[v] - arr[9])/arr[9])
+
+        for v in range(10):
+            a = []
+            if v !=9 :
+                s = v + 1
+                a.append(imp_momentom_per[v] - imp_momentom_per[s])
+                imp_range_of_fuc.append(a)
+            else :
+                a.append(imp_momentom_per[9])
+                imp_range_of_fuc.append(a)
+            
+        cal_df = pd.DataFrame(imp_range_of_fuc)
+        cal_df.columns = [name + '_cal']
+        aaa.append(cal_df)
+        bbb.append(aaa)
+        #print(cal_df)
+    print(bbb)
+    #return cal_df
+
 
 def handle_data(json_data):
     kwd = json_data['keyword']
@@ -64,7 +92,7 @@ def handle_data(json_data):
     df.insert(0,'rank',rank,allow_duplicates = False)
     df.insert(0,'keyword',kwd,allow_duplicates = False)
     df['cpc'] = round(df['cost']/df['clicks'],0)
-    imp_cal(df)
+    momentom_cal(df)
 
     df = df[['keyword','rank','bid','impressions','clicks','cpc','cost']]
 
@@ -107,7 +135,7 @@ def init() :
     #concated_df = concat_df(list_of_df)
     ##print(len(list_of_df))
     ##print(len(query))
-    print(list_of_df)
+    #print(list_of_df)
     #write_csv(concated_df,main_kwd)
     #print(concated_df)
     #print(kwd_list)
