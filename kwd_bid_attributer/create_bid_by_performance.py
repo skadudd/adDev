@@ -10,10 +10,11 @@ import pandas as pd
 from pandas import DataFrame
 from functools import reduce
 import signaturehelper
+import numpy
 
 today = date.today()
 monthly_performance_path = '/Users/maketing/adDev/kwd_bid_attributer'
-request_query_file = '/2020_11_최종키워드소스 복사본.csv'
+request_query_file = '/2020_11_최종키워드소스 복사본.csv'
 target_dir = '/Users/maketing/adDev/kwd_bid_attributer'
 
 BASE_URL = 'https://api.naver.com'
@@ -42,61 +43,12 @@ def get_rows(query):
         list_of_kwds.append(row[0])
         row.pop(0)
         for value in row:
-            inner.append(value)
+            if value.isdigit() == True :
+                inner.append(value)
         list_of_rows.append(inner)
 
     return list_of_kwds,list_of_rows
 
-
-def momentom_cal(df):
-    names = ['bid','impressions','clicks']
-    bbb = []
-    for name in names:
-        aaa = []
-        #print(df)
-        col_name = name
-        arr = []
-        imp_momentom_per = []
-        imp_range_of_fuc = []
-        for v in range(len(df)):
-            arr.append(df[col_name][v])
-
-        for v in range(len(arr)):
-            
-            imp_momentom_per.append((arr[v] - arr[9])/arr[9])
-
-        for v in range(10):
-            a = []
-            if v !=9 :
-                s = v + 1
-                a.append(imp_momentom_per[v] - imp_momentom_per[s])
-                imp_range_of_fuc.append(a)
-            else :
-                a.append(imp_momentom_per[9])
-                imp_range_of_fuc.append(a)
-            
-        cal_df = pd.DataFrame(imp_range_of_fuc)
-        cal_df.columns = [name + '_cal']
-        aaa.append(cal_df)
-        bbb.append(aaa)
-        #print(cal_df)
-    print(bbb)
-    #return cal_df
-
-
-def handle_data(json_data):
-    kwd = json_data['keyword']
-    rank = pd.Series([1,2,3,4,5,6,7,8,9,10])
-    
-    df = pd.DataFrame.from_dict(json_data['estimate'])
-    df.insert(0,'rank',rank,allow_duplicates = False)
-    df.insert(0,'keyword',kwd,allow_duplicates = False)
-    df['cpc'] = round(df['cost']/df['clicks'],0)
-    momentom_cal(df)
-
-    df = df[['keyword','rank','bid','impressions','clicks','cpc','cost']]
-
-    return df
 
 def get_data(kwd_list, row_list):
     # bids[] : The maximum of 100 bids can be requested at once.
@@ -110,9 +62,160 @@ def get_data(kwd_list, row_list):
         print("response status_code = {}".format(r.status_code))
         json_data = json.loads(r.text)
         df = handle_data(json_data)
-        handled_df.append(df)
+        get_best_bid = get_best_performance_bid(df)
+        handled_df.append(get_best_bid)
+        # handled_df.append(df)
 
     return handled_df
+
+def momentom_cal(df):
+    names = ['bid','impressions','clicks']
+    cal_rows_list = []
+    #print(df)
+    
+    for name in names:
+        df = df.fillna(0)
+        df = df[df[name] != 0]
+        df.tail()
+        col_name = name
+        arr = []
+
+        pfm_monentom_rate = []
+        pfm_range_fct = []
+        if range(len(df)) == 0 :
+            pfm_monentom_rate = [0,0,0,0,0,0,0,0,0,0]
+        else :    
+            for v in range(len(df)):
+                arr.append(df[col_name][v])
+
+            for v in range(len(arr)):
+                #print('식은 : ',arr[v],'','-','',arr[len(arr)-1])
+                pfm_monentom_rate.append((arr[v] - arr[len(arr)-1])/arr[len(arr)-1])
+                
+            if len(pfm_monentom_rate) != 10 :
+                while len(pfm_monentom_rate) <= 9:
+                    pfm_monentom_rate.append(0)
+
+            #print(pfm_monentom_rate)
+        
+        for v in range(10):
+            inner_cal_list = []
+            if v !=9 :
+                s = v + 1
+                inner_cal_list.append(pfm_monentom_rate[v] - pfm_monentom_rate[s])
+                pfm_range_fct.append(inner_cal_list)
+            else :
+                inner_cal_list.append(pfm_monentom_rate[9])
+                pfm_range_fct.append(inner_cal_list)
+            
+        cal_df = pd.DataFrame(pfm_range_fct)
+        cal_df.columns = [name + '_cal']
+        cal_rows_list.append(cal_df)
+
+    data_merged = pd.concat([cal_rows_list[0],cal_rows_list[1],cal_rows_list[2]],axis=1)
+    
+    #print(data_merged)
+        
+    return data_merged
+
+
+def handle_data(json_data):
+    kwd = json_data['keyword']
+    rank = pd.Series([1,2,3,4,5,6,7,8,9,10])
+    
+    df = pd.DataFrame.from_dict(json_data['estimate'])
+    df.insert(0,'rank',rank,allow_duplicates = False)
+    df.insert(0,'keyword',kwd,allow_duplicates = False)
+    df['cpc'] = round(df['cost']/df['clicks'],0)
+    monentom_df = momentom_cal(df)
+    merged_df = pd.concat([df,monentom_df],axis=1)
+    #print(list(merged_df))
+    merged_df = merged_df[['keyword','rank','bid','impressions','clicks','cpc','cost','bid_cal','impressions_cal','clicks_cal']]
+
+    return merged_df
+
+
+def get_best_performance_bid(list_of_df):
+    # list_of_df['분류1'] = list_of_df['keyword'].apply(lambda x : define_relation(x))
+    # list_of_df['분류2'] = list_of_df['bidding1st'].apply(lambda x : define_popularity(x))
+    keyword = list_of_df['keyword'][0]
+    max_bid = list_of_df['bid'][0]
+    kwd_relationship_score = define_relation(keyword)
+    kwd_popularity_score = define_popularity(max_bid)
+    do_math_for_best_bid(list_of_df,kwd_relationship_score,kwd_popularity_score)
+    
+#분류 1
+def define_relation(x):
+    r = define_regex(x)
+    r2 = define_regex2(x)
+    if r != None and r2 == None :
+        return '고관련'
+    else :
+        return '저관련'
+
+def define_popularity(x):
+    if x > 70 :
+        return '인기'
+    else :
+        return '비인기'
+#분류 1 정규식
+def define_regex(x):
+    regex = re.compile(r'(CNC|가공$|선반$|업체$|가공$|제작공장$|생산공장$|가공공장|견적$|업체$|파트너$|견적$|단가$|가공|부품|제조|밀링|선반|커팅|컷팅|생산|절삭|목업|제작$|가공단가$|임가공$|설계$)')
+    r = regex.search(x)
+    return r
+#분류 1 정규식
+def define_regex2(x):
+    regex = re.compile(r'(POM|메탈$|플라스틱$|실험|와이어|압출|드릴링|휴대폰|양두|황동제작|자동차|항공|비행기|선박|조명|용품$|장비$|선반$|가격$|설계$|탭$|용품$|장비$|부품$|기술$|종류$|머신$|기계$|산업$|GUR$|나일론$|테프론$|아세탈$|티타늄$|네이트$|MDF$)')
+    r = regex.search(x)
+    return r
+
+def do_math_for_best_bid(df,kwd_r_score,kwd_p_score):
+    #고관련 인기
+    if kwd_r_score == '고관련' and kwd_p_score == '인기' :
+        print('고관련 인기')
+        print(df)
+        max_click_biddings = df[df['clicks']==df['clicks'].max()]
+        #최대 클릭 수가 0이라면 70원에 비딩하라.
+        if df['clicks'].max() == 0 :
+            print(df[df['rank']==10])
+        #0이 아니며, 최대 클릭수를 가진 구좌가 중복될때, 최소 비딩가에 비딩하라.
+        # elif len(max_click_biddings) >= 2 :
+            # best_bid = max_click_biddings[max_click_biddings['bid']==max_click_biddings['bid'].min()]
+            # print(best_bid)
+        else :
+            max_click_cal = df[df['clicks_cal']==df['clicks_cal'].max()]
+            best_bid = max_click_cal[max_click_cal['bid']==max_click_cal['bid'].min()]
+            print(best_bid)
+        
+    #고관련 비인기
+    if kwd_r_score == '고관련' and kwd_p_score == '비인기' :
+        print('고관련 비인기')
+        #1~10위 까지 70원 이상의 비딩이 없다면 10위 (70원)으로 비딩하라
+        if len(df[df['bid']>70]) == 0 :
+            print(df[df['rank']==10])
+        
+
+    #저관련 인기
+    if kwd_r_score == '저관련' and kwd_p_score == '인기' :
+        print('저관련 인기')
+        #print(df)
+        #1~10 순위 중 1000원 이하의 bid가 없다면 10위로 비딩하라
+        if len(df[df['bid']<=1000]) == 0 :
+            print(df[df['rank']==10])
+        #1000원 이하의 값이 있다면, 노출 수가 0이 아니며, bid 변동폭이 가장 급격한 구간 바로 아래의 구좌에 비딩하라.
+        else :
+            df_not_zero = df[df['impressions'] != 0]
+            df_momentom = df_not_zero[df_not_zero['bid_cal']==df_not_zero['bid_cal'].max()]
+            best_bid = df[df['rank']==df_momentom['rank'].values[0] + 1]
+            print(best_bid)
+            
+        a = df[df['clicks']==df['clicks'].max()]
+        b = a[a['bid']==a['bid'].min()]
+        c = df[df['bid']<=100]
+
+    #저관련 비인기
+    if kwd_r_score == '저관련' and kwd_p_score == '비인기' :
+        print('저관련 비인기')
 
 def concat_df(data):
     frames = []
@@ -132,13 +235,13 @@ def init() :
     main_kwd = query[0][1]
     kwd_list,row_list = get_rows(query)
     list_of_df = get_data(kwd_list,row_list)
+
+    #print(df_for_bid)
     #concated_df = concat_df(list_of_df)
     ##print(len(list_of_df))
     ##print(len(query))
-    #print(list_of_df)
-    #write_csv(concated_df,main_kwd)
+    # print(list_of_df)
     #print(concated_df)
-    #print(kwd_list)
-    #print(row_values)
-
+    #write_csv(concated_df,main_kwd)
+    
 init()
