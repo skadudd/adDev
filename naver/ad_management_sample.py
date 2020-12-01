@@ -22,9 +22,9 @@ CUSTOMER_ID = '1158940'
 
 # ManageCustomerLink Usage Sample
 
-uri = '/customer-links'
-method = 'GET'
-r = requests.get(BASE_URL + uri, params={'type': 'MYCLIENTS'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# uri = '/customer-links'
+# method = 'GET'
+# r = requests.get(BASE_URL + uri, params={'type': 'MYCLIENTS'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 # print("response status_code = {}".format(r.status_code))
 # print("response body = {}".format(r.json()))
@@ -94,16 +94,16 @@ r = requests.get(BASE_URL + uri, params={'type': 'MYCLIENTS'}, headers=get_heade
 
 # # AdKeyword Usage Sample
 
-# # 1. CREATE AdKeyword
+# 1. CREATE AdKeyword
 
-# uri = '/ncc/keywords'
-# method = 'POST'
-# r = requests.post(BASE_URL + uri, params={'nccAdgroupId': created_adgroup['nccAdgroupId']}, json=[{'keyword': 'hello'}], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+uri = '/ncc/keywords'
+method = 'POST'
+r = requests.post(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018602440'}, json=[{'keyword': 'hello'}], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
+print("response status_code = {}".format(r.status_code))
+print("response body = {}".format(r.json()))
 
-# created_adkeyword = r.json()[0]
+created_adkeyword = r.json()[0]
 
 # # 2. GET AdKeyword
 
@@ -160,12 +160,12 @@ r = requests.get(BASE_URL + uri, params={'type': 'MYCLIENTS'}, headers=get_heade
 
 # 1. average-position-bid
 
-uri = '/estimate/average-position-bid/keyword'
-method = 'POST'
-r = requests.post(BASE_URL + uri, json={'device': 'PC', 'items': [{'key': '금속가공', 'position': 7}, {'key': '중고차', 'position': 7}, {'key': '자전거여행', 'position': 9}]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# uri = '/estimate/average-position-bid/keyword'
+# method = 'POST'
+# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'items': [{'key': '금속가공', 'position': 7}, {'key': '중고차', 'position': 7}, {'key': '자전거여행', 'position': 9}]}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-print("#response status_code = {}".format(r.status_code))
-print("#response body = {}".format(r.json()))
+# print("#response status_code = {}".format(r.status_code))
+# print("#response body = {}".format(r.json()))
 
 
 # # 2. exposure-minimum-bid
@@ -179,12 +179,12 @@ print("#response body = {}".format(r.json()))
 
 # 3. median-bid
 
-uri = '/estimate/median-bid/keyword'
-method = 'POST'
-r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['금속가공', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# uri = '/estimate/median-bid/keyword'
+# method = 'POST'
+# r = requests.post(BASE_URL + uri, json={'device': 'PC', 'period': 'MONTH', 'items': ['금속가공', '중고차', '자전거여행']}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-print("response status_code = {}".format(r.status_code))
-print("response body = {}".format(r.json()))
+# print("response status_code = {}".format(r.status_code))
+# print("response body = {}".format(r.json()))
 
 
 # # 4. performance
