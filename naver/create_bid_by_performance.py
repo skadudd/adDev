@@ -11,10 +11,11 @@ from pandas import DataFrame
 from functools import reduce
 import signaturehelper
 import numpy
+import kwd_uploader
 
 today = date.today()
 monthly_performance_path = '/Users/maketing/adDev/kwd_bid_attributer'
-request_query_file = '/2020_11_최종키워드소스 복사본.csv'
+request_query_file = '/2020_11_최종키워드소스 복사본.csv'
 target_dir = '/Users/maketing/adDev/kwd_bid_attributer'
 
 BASE_URL = 'https://api.naver.com'
@@ -63,8 +64,8 @@ def get_data(kwd_list, row_list):
         json_data = json.loads(r.text)
         df = handle_data(json_data)
         get_best_bid = get_best_performance_bid(df)
-        handled_df.append(get_best_bid)
-        # handled_df.append(df)
+        handled_df.append(get_best_bid)        
+        #handled_df.append(df)
 
     return handled_df
 
@@ -118,7 +119,6 @@ def momentom_cal(df):
         
     return data_merged
 
-
 def handle_data(json_data):
     kwd = json_data['keyword']
     rank = pd.Series([1,2,3,4,5,6,7,8,9,10])
@@ -139,10 +139,12 @@ def get_best_performance_bid(list_of_df):
     # list_of_df['분류1'] = list_of_df['keyword'].apply(lambda x : define_relation(x))
     # list_of_df['분류2'] = list_of_df['bidding1st'].apply(lambda x : define_popularity(x))
     keyword = list_of_df['keyword'][0]
-    max_bid = list_of_df['bid'][0]
+    impressions = list_of_df['impressions'][0]
     kwd_relationship_score = define_relation(keyword)
-    kwd_popularity_score = define_popularity(max_bid)
-    do_math_for_best_bid(list_of_df,kwd_relationship_score,kwd_popularity_score)
+    kwd_popularity_score = define_popularity(impressions)
+    best_bid = do_math_for_best_bid(list_of_df,kwd_relationship_score,kwd_popularity_score)
+    
+    return best_bid
     
 #분류 1
 def define_relation(x):
@@ -154,7 +156,7 @@ def define_relation(x):
         return '저관련'
 
 def define_popularity(x):
-    if x > 70 :
+    if x > 150 :
         return '인기'
     else :
         return '비인기'
@@ -171,62 +173,97 @@ def define_regex2(x):
 
 def do_math_for_best_bid(df,kwd_r_score,kwd_p_score):
     #고관련 인기
+
     if kwd_r_score == '고관련' and kwd_p_score == '인기' :
-        print('고관련 인기')
-        print(df)
         max_click_biddings = df[df['clicks']==df['clicks'].max()]
         #최대 클릭 수가 0이라면 70원에 비딩하라.
         if df['clicks'].max() == 0 :
-            print(df[df['rank']==10])
+            best_bid = df[df['rank']==10]
+            best_bid['attr'] = '고관련인기'
+            return best_bid
         #0이 아니며, 최대 클릭수를 가진 구좌가 중복될때, 최소 비딩가에 비딩하라.
         # elif len(max_click_biddings) >= 2 :
             # best_bid = max_click_biddings[max_click_biddings['bid']==max_click_biddings['bid'].min()]
             # print(best_bid)
-        else :
+        #최대 클릭수가 0이 아니며, 최대 비딩가가 4000원 미만일 시, 클릭 변동폭이 가장 높은 구좌 중, 비딩가가 가장 낮은 구좌에 비딩하라.
+        elif df['clicks'].max() != 0 and df['bid'].max() < 4000 :
             max_click_cal = df[df['clicks_cal']==df['clicks_cal'].max()]
             best_bid = max_click_cal[max_click_cal['bid']==max_click_cal['bid'].min()]
-            print(best_bid)
+            best_bid['attr'] = '고관련인기'
+            return best_bid
+        #노출 변동폭이 0인 값이 중복될때, 최대 노출값을 가진 구좌들 중 클릭이 1 이상 보장되는 구좌 중 최소 비딩 금액에 비딩하라.
+        elif len(df[df['impressions_cal'] == 0]) > 1 :
+            max_imp_cal = df[df['impressions']==df['impressions'].max()]
+            min_one_click = max_imp_cal[max_imp_cal['clicks']!=0]
+            best_bid = min_one_click[min_one_click['bid']==min_one_click['bid'].min()]
+            best_bid['attr'] = '고관련인기'
+            return best_bid
+
         
-    #고관련 비인기
+    #고관련 비인기 = 고관련 + 1위 비딩가 150원 이하
     if kwd_r_score == '고관련' and kwd_p_score == '비인기' :
-        print('고관련 비인기')
+       
         #1~10위 까지 70원 이상의 비딩이 없다면 10위 (70원)으로 비딩하라
         if len(df[df['bid']>70]) == 0 :
-            print(df[df['rank']==10])
-        
-
+            best_bid = df[df['rank']==10]
+            best_bid['attr'] = '고관련비인기'
+            return best_bid
+        else :
+            best_bid = df[df['rank']==1]
+            best_bid['attr'] = '고관련비인기'
+            return best_bid
     #저관련 인기
     if kwd_r_score == '저관련' and kwd_p_score == '인기' :
-        print('저관련 인기')
         #print(df)
         #1~10 순위 중 1000원 이하의 bid가 없다면 10위로 비딩하라
         if len(df[df['bid']<=1000]) == 0 :
-            print(df[df['rank']==10])
+            best_bid = df[df['rank']==10]
+            best_bid['attr'] = '저관련인기'
+            return best_bid
+        #노출 변동폭이 0인 값이 중복될때, 최대 노출 구좌들 중 최소 비딩가에 비딩하라.
+        elif len(df[df['impressions_cal'] == 0]) > 1 :
+            max_imp_cal = df[df['impressions']==df['impressions'].max()]
+            best_bid = max_imp_cal[max_imp_cal['bid']==max_imp_cal['bid'].min()]
+            best_bid['attr'] = '저관련인기'
+            return best_bid
         #1000원 이하의 값이 있다면, 노출 수가 0이 아니며, bid 변동폭이 가장 급격한 구간 바로 아래의 구좌에 비딩하라.
         else :
             df_not_zero = df[df['impressions'] != 0]
             df_momentom = df_not_zero[df_not_zero['bid_cal']==df_not_zero['bid_cal'].max()]
-            best_bid = df[df['rank']==df_momentom['rank'].values[0] + 1]
-            print(best_bid)
-            
-        a = df[df['clicks']==df['clicks'].max()]
-        b = a[a['bid']==a['bid'].min()]
-        c = df[df['bid']<=100]
+            if len(df_momentom) > 1:
+                best_bid = df[df['rank']==df_momentom['rank'].values[0] + 1]
+                best_bid['attr'] = '저관련인기'
+                return best_bid
 
+            else : 
+                best_bid = df_momentom
+                best_bid['attr'] = '저관련인기'
+                return best_bid
+ 
     #저관련 비인기
     if kwd_r_score == '저관련' and kwd_p_score == '비인기' :
-        print('저관련 비인기')
+        #노출이 1 이상인 값이 전혀 없다면, 10위에 비딩하라
+        if len(df[df['impressions']<=1]) == 10 :
+            best_bid = df[df['rank']==10]
+            best_bid['attr'] = '저관련비인기'
+            return best_bid
+        #노출이 0이 아닌 값들 중 가장 저렴한 값에 비딩하라.
+        else :
+            df_not_zero = df[df['impressions'] != 0]
+            min_bid = df_not_zero[df_not_zero['bid']==df_not_zero['bid'].min()]
+            best_bid = min_bid[min_bid['rank']==min_bid['rank'].max()]
+            best_bid['attr'] = '저관련비인기'
+            return best_bid
 
 def concat_df(data):
     frames = []
     for i in range(len(data)):
         frames.append(data[i])
     result = pd.concat(frames)
-
     return result
 
 def write_csv(concated_df,kwd):
-    concated_df.to_csv(Path(target_dir, f'{today.year}{today.month}_{kwd}_구좌순위별_예상실적.csv'), index=False)
+    concated_df.to_csv(Path(target_dir, f'{today.year}{today.month}_{kwd}_키워드최적비딩가.csv'), index=False)
     #print(concated_df)
 
 def init() :
@@ -235,13 +272,14 @@ def init() :
     main_kwd = query[0][1]
     kwd_list,row_list = get_rows(query)
     list_of_df = get_data(kwd_list,row_list)
-
-    #print(df_for_bid)
-    #concated_df = concat_df(list_of_df)
+    concated_df = concat_df(list_of_df)
+    concated_df = concated_df.reset_index()
+    
     ##print(len(list_of_df))
     ##print(len(query))
     # print(list_of_df)
     #print(concated_df)
+    kwd_uploader.create_kwd_set(concated_df)
     #write_csv(concated_df,main_kwd)
     
 init()

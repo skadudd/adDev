@@ -13,7 +13,7 @@ import signaturehelper
 
 today = date.today()
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-request_query_file = '/202011_CNC_구좌순위별_비딩가.csv'
+request_query_file = '/202011_기계설계_구좌순위별_비딩가.csv'
 target_dir = '/Users/maketing/adDev/NSA_rel_keyword/estimate_performance'
 
 
@@ -97,8 +97,8 @@ def init() :
     kwd_list,row_list = get_rows(query)
     list_of_df = get_data(kwd_list,row_list)
     concated_df = concat_df(list_of_df)
-    write_csv(concated_df,main_kwd)
-    #print(concated_df)
+    #write_csv(concated_df,main_kwd)
+    print(concated_df)
     #print(kwd_list)
     #print(row_values)
 
