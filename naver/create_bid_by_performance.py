@@ -11,11 +11,12 @@ from pandas import DataFrame
 from functools import reduce
 import signaturehelper
 import numpy
+
 import kwd_uploader
 
 today = date.today()
 monthly_performance_path = '/Users/maketing/adDev/kwd_bid_attributer'
-request_query_file = '/2020_11_최종키워드소스 복사본.csv'
+request_query_file = '/2020_11_최종키워드소스.csv'
 target_dir = '/Users/maketing/adDev/kwd_bid_attributer'
 
 BASE_URL = 'https://api.naver.com'
@@ -27,6 +28,8 @@ def get_header(method, uri, api_key, secret_key, customer_id):
     timestamp = str(round(time.time() * 1000))
     signature = signaturehelper.Signature.generate(timestamp, method, uri, SECRET_KEY)
     return {'Content-Type': 'application/json; charset=UTF-8', 'X-Timestamp': timestamp, 'X-API-KEY': API_KEY, 'X-Customer': str(CUSTOMER_ID), 'X-Signature': signature}
+
+
 
 def get_query():
     df = pd.read_csv(monthly_performance_path + request_query_file ,header=None)
@@ -59,6 +62,10 @@ def get_data(kwd_list, row_list):
     
     for v in range(len(kwd_list)):
         r = requests.post(BASE_URL + uri, json={'device': 'PC', 'keywordplus': True, 'key': kwd_list[v], 'bids':row_list[v] }, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+        if r.status_code is not 200:
+            time.sleep(5)
+            r = requests.post(BASE_URL + uri, json={'device': 'PC', 'keywordplus': True, 'key': kwd_list[v], 'bids':row_list[v] }, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+            print('sleep 5')
 
         print("response status_code = {}".format(r.status_code))
         json_data = json.loads(r.text)
@@ -121,6 +128,7 @@ def momentom_cal(df):
 
 def handle_data(json_data):
     kwd = json_data['keyword']
+    print(kwd)
     rank = pd.Series([1,2,3,4,5,6,7,8,9,10])
     
     df = pd.DataFrame.from_dict(json_data['estimate'])
