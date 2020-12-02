@@ -37,6 +37,8 @@ CUSTOMER_ID = '1158940'
 # a[b].append(5)
 # print(a[b])
 a = {'a':0, 'b':0}
+a['a'] = 1
+a['a'] = 2
 print(a['a'])
 
 def create_kwd_set(concated_df):
@@ -64,8 +66,24 @@ def create_kwd_set(concated_df):
     #네이버 요청
     for f in atrred_kwd:
         for s in atrred_kwd[f]:
-            ad_group_name = ad_group[f]
+            #ad_group_name = ad_group[f]
             kwd_set = s
+
+            if ad_group[f] == 0:
+                created_group_id = adGroup_creator(f)
+                ad_group[f] = created_group_id
+                ad_group_name = ad_group[f]
+                print('새 그룹 생성')
+            else :
+                recent_kwd_num = adGroup_kwd_counter(ad_group[f])
+                new_kwd_num = len(s)
+                if recent_kwd_num + new_kwd_num >= 1000 :
+                    created_group_id = adGroup_creator(f)
+                    ad_group[f] = created_group_id
+                    ad_group_name = ad_group[f]
+                else : 
+                    ad_group_name = ad_group[f]
+      
             request_upload_to_naver(kwd_set,ad_group_name)
     # kwd = concated_df['bid']['고관련비인기']
     # print(concated_df)
@@ -106,26 +124,33 @@ def request_upload_to_naver(kwd_set,ad_group):
     
 
 # 2. GET AdKeyword
-def adGroup_kwd_counter() :
+def adGroup_kwd_counter(adGroup_id) :
     uri = '/ncc/keywords'
     method = 'GET'
-    r = requests.get(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018613603'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+    r = requests.get(BASE_URL + uri, params={'nccAdgroupId': adGroup_id}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-    print("response status_code = {}".format(r.status_code))
-    print("response body = {}".format(len(r.json())))
+    #print("response status_code = {}".format(r.status_code))
+    return len(r.json())
 
 
 # 2. CREATE adgroup Usage Sample
-def adGroup_creater() :
+def adGroup_creator(f) :
     uri = '/ncc/adgroups'
     method = 'POST'
-    payload = {'name': 'TEST#' + str(random.randrange(1000, 9999)), 'nccCampaignId' : 'cmp-a001-01-000000003407888', 'pcChannelId' : 'bsn-a001-00-000000000882190', 'mobileChannelId': 'bsn-a001-00-000000000882190'}
+    payload = {
+        'name': f +'_PC_'+ str(random.randrange(1000, 9999)), 
+        'nccCampaignId' : 'cmp-a001-01-000000003407888', 
+        'pcChannelId' : 'bsn-a001-00-000000004519293', 
+        'mobileChannelId': 'bsn-a001-00-000000004519293',
+        'userLock': True
+        }
     r = requests.post(BASE_URL + uri, json=payload, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-    print("response status_code = {}".format(r.status_code))
-    print("response body = {}".format(r.json()))
+    #print("response status_code = {}".format(r.status_code))
+    #print("response body = {}".format(r.json()))
 
     created_adgroup = r.json()
+    print(created_adgroup)
     return created_adgroup['nccAdgroupId']
 
 

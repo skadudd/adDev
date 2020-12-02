@@ -164,7 +164,7 @@ def define_relation(x):
         return '저관련'
 
 def define_popularity(x):
-    if x > 150 :
+    if x > 50 :
         return '인기'
     else :
         return '비인기'
@@ -288,6 +288,6 @@ def init() :
     # print(list_of_df)
     #print(concated_df)
     kwd_uploader.create_kwd_set(concated_df)
-    #write_csv(concated_df,main_kwd)
+    write_csv(concated_df,main_kwd)
     
 init()
