@@ -36,14 +36,15 @@ CUSTOMER_ID = '1158940'
 # b = 'aaa'
 # a[b].append(5)
 # print(a[b])
-
+a = {'a':0, 'b':0}
+print(a['a'])
 
 def create_kwd_set(concated_df):
     ad_group = {
-        '고관련인기' : 'grp-a001-01-000000018602440', 
-        '고관련비인기' : 'grp-a001-01-000000018602500', 
-        '저관련인기' : 'grp-a001-01-000000018602509', 
-        '저관련비인기' : 'grp-a001-01-000000018602514'}
+        '고관련인기' : 0, 
+        '고관련비인기' : 0, 
+        '저관련인기' : 0, 
+        '저관련비인기' : 0}
     atrred_kwd = {'고관련인기' : [], '고관련비인기' : [], '저관련인기' : [], '저관련비인기' : []}
     # index_title = ['고관련인기','고관련비인기','저관련인기','저관련비인기']
 
@@ -57,7 +58,7 @@ def create_kwd_set(concated_df):
 
     #list 나누기    
     for v in atrred_kwd :        
-        n = 2
+        n = 100
         atrred_kwd[v] = [atrred_kwd[v][i * n:(i + 1) * n] for i in range((len(atrred_kwd[v]) + n - 1) // n )] 
     #print(atrred_kwd)
     #네이버 요청
@@ -73,8 +74,8 @@ def create_kwd_set(concated_df):
 
 def kwd_set_to_json(kwd,bid):
     kapa_link = {
-      "pc": {"final": "https://beta.creatable.com"},
-      "mobile": {"final": "https://beta.creatable.com"}
+      "pc": {"final": "https://capa.ai"},
+      "mobile": {"final": "https://capa.ai"}
     }
     
     kwd_set = dict(keyword = kwd, useGroupBidAmt = False, bidAmt = f'{bid}', links= kapa_link)
@@ -94,24 +95,37 @@ def request_upload_to_naver(kwd_set,ad_group):
         'nccAdgroupId': ad_group}, 
         json = kwd_set, 
         headers= get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+    if r.status_code is not 200:
+        time.sleep(5)
+        r = requests.post(BASE_URL + uri, params={
+            'nccAdgroupId': ad_group}, 
+            json = kwd_set, 
+            headers= get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+    print("response status_code = {}".format(r.status_code))
+    print("response body = {}".format(r.json()))
+    
+
+# 2. GET AdKeyword
+def adGroup_kwd_counter() :
+    uri = '/ncc/keywords'
+    method = 'GET'
+    r = requests.get(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018613603'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+
+    print("response status_code = {}".format(r.status_code))
+    print("response body = {}".format(len(r.json())))
+
+
+# 2. CREATE adgroup Usage Sample
+def adGroup_creater() :
+    uri = '/ncc/adgroups'
+    method = 'POST'
+    payload = {'name': 'TEST#' + str(random.randrange(1000, 9999)), 'nccCampaignId' : 'cmp-a001-01-000000003407888', 'pcChannelId' : 'bsn-a001-00-000000000882190', 'mobileChannelId': 'bsn-a001-00-000000000882190'}
+    r = requests.post(BASE_URL + uri, json=payload, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
     print("response status_code = {}".format(r.status_code))
     print("response body = {}".format(r.json()))
-    print(len(kwd_set))
 
-    
-# def request_upload_to_naver2():
+    created_adgroup = r.json()
+    return created_adgroup['nccAdgroupId']
 
-#     uri = '/ncc/keywords'
-#     method = 'POST'
-#     r = requests.post(BASE_URL + uri, params={
-#         'nccAdgroupId': 'grp-a001-01-000000018602440'}, 
-#         json= [{'keyword': 'CNC가공', 'useGroupBidAmt': False, 'bidAmt': 5370, 'links': {'pc': {'final': 'https://beta.creatable.com'}, 'mobile': {'final': 'https://beta.creatable.com'}}}],
-#         headers= get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-#     print("response status_code = {}".format(r.status_code))
-#     print("response body = {}".format(r.json()))
-#     created_adkeyword = r.json()[0]
-
-# request_upload_to_naver2()
-# print(1)
