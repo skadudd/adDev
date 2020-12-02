@@ -49,29 +49,40 @@ CUSTOMER_ID = '1158940'
 #print(target_campaign)
 # Adgroup Usage Sample
 
-# 1. GET adgroup Usage Sample
+## 1. GET adgroup Usage Sample
 
-# uri = '/ncc/adgroups'
+# uri = '/ncc/adgroups/grp-a001-01-000000018613590'
 # method = 'GET'
 # r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 # print("response status_code = {}".format(r.status_code))
 # print("response body = {}".format(r.json()))
-# target_adgroup = r.json()[2]
-# print(target_adgroup)
+# target_adgroup = r.json()
+#print(target_adgroup)
 
+# 1. GET adgroup Usage Sample
+
+uri = '/ncc/ads/nad-a001-01-000000114741459'
+method = 'GET'
+r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+
+print("response status_code = {}".format(r.status_code))
+print("response body = {}".format(r.json()))
+target_adgroup = r.json()
+print(target_adgroup)
 
 # 2. CREATE adgroup Usage Sample
 
 # uri = '/ncc/adgroups'
 # method = 'POST'
-# payload = {'name': '테스트' + str(random.randrange(1000, 9999)), 'nccCampaignId' : 'cmp-a001-01-000000003405800', 'pcChannelId' : target_adgroup['pcChannelId'], 'mobileChannelId': target_adgroup['mobileChannelId']}
+# payload = {'name': 'TEST#' + str(random.randrange(1000, 9999)), 'nccCampaignId' : 'cmp-a001-01-000000003407888', 'pcChannelId' : 'bsn-a001-00-000000000882190', 'mobileChannelId': 'bsn-a001-00-000000000882190'}
 # r = requests.post(BASE_URL + uri, json=payload, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 # print("response status_code = {}".format(r.status_code))
 # print("response body = {}".format(r.json()))
 
 # created_adgroup = r.json()
+# print(created_adgroup['nccAdgroupId'])
 
 # # 3. UPDATE Adgroup Usage Sample
 
@@ -96,23 +107,23 @@ CUSTOMER_ID = '1158940'
 
 # 1. CREATE AdKeyword
 
-uri = '/ncc/keywords'
-method = 'POST'
-r = requests.post(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018602440'}, json=[{'keyword': 'hello'}], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-
-print("response status_code = {}".format(r.status_code))
-print("response body = {}".format(r.json()))
-
-created_adkeyword = r.json()[0]
-
-# # 2. GET AdKeyword
-
 # uri = '/ncc/keywords'
-# method = 'GET'
-# r = requests.get(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000013327656'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# method = 'POST'
+# r = requests.post(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018602440'}, json=[{'keyword': 'hello'}], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 # print("response status_code = {}".format(r.status_code))
 # print("response body = {}".format(r.json()))
+
+# created_adkeyword = r.json()[0]
+
+# 2. GET AdKeyword
+
+# uri = '/ncc/keywords'
+# method = 'GET'
+# r = requests.get(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018613603'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+
+# print("response status_code = {}".format(r.status_code))
+# print("response body = {}".format(len(r.json())))
 
 # # 3. UPDATE AdKeyword
 
