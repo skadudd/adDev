@@ -15,7 +15,8 @@ import signaturehelper
 today = date.today()
 
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '/Users/maketing/adDev/NSA_rel_keyword/2020_11_기계설계_필터된키워드.csv'
+query_path = '/Users/maketing/adDev/NSA_rel_keyword/자체제작.csv'
+device = 'MOBILE'
 
 
 def get_header(method, uri, api_key, secret_key, customer_id):
@@ -59,7 +60,7 @@ def get_data(kwd):
     uri = '/estimate/average-position-bid/keyword'
     method = 'POST'
     r = requests.post(BASE_URL + uri, json={
-        'device': 'PC', 
+        'device': device, 
         'items': kwd
         }, 
         headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
@@ -110,15 +111,21 @@ def init() :
     DB = []
     query = get_query()
     main_kwd = query[0][1]
-
-    for i in range(10):
+    if device is 'PC':
+        range_itterate = 10
+    else :
+        range_itterate = 5
+    print(range_itterate)
+    for i in range(range_itterate):
         i += 1
         data = sample_data_set(query,i)
         list_of_dataframe = request_estimate(data,i)
         distributed_df = concat_df(list_of_dataframe)
         DB.append(distributed_df)
-        time.sleep(5)
+        time.sleep(2)
+    
     df_of_bid = merge_df(DB)
+    print(df_of_bid)
     write_csv(df_of_bid,main_kwd)
 
 init()

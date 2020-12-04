@@ -13,9 +13,9 @@ import signaturehelper
 
 today = date.today()
 monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-request_query_file = '/202011_기계설계_구좌순위별_비딩가.csv'
+request_query_file = '/202012_자체제작_구좌순위별_비딩가.csv'
 target_dir = '/Users/maketing/adDev/NSA_rel_keyword/estimate_performance'
-
+device = 'MOBILE'
 
 BASE_URL = 'https://api.naver.com'
 API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
@@ -68,7 +68,7 @@ def get_data(kwd_list, row_list):
     handled_df = []
     
     for v in range(len(kwd_list)):
-        r = requests.post(BASE_URL + uri, json={'device': 'PC', 'keywordplus': True, 'key': kwd_list[v], 'bids':row_list[v] }, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+        r = requests.post(BASE_URL + uri, json={'device': device, 'keywordplus': True, 'key': kwd_list[v], 'bids':row_list[v] }, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
         print("response status_code = {}".format(r.status_code))
         json_data = json.loads(r.text)
@@ -97,7 +97,7 @@ def init() :
     kwd_list,row_list = get_rows(query)
     list_of_df = get_data(kwd_list,row_list)
     concated_df = concat_df(list_of_df)
-    #write_csv(concated_df,main_kwd)
+    write_csv(concated_df,main_kwd)
     print(concated_df)
     #print(kwd_list)
     #print(row_values)
