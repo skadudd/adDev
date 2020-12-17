@@ -86,7 +86,7 @@ def init():
     raw_data = []
     driver = webdriver.Chrome('/Users/maketing/Downloads/chromedriver')
     driver.implicitly_wait(3) 
-    driver.get('https://www.wadiz.kr/web/wreward/category/297?keyword=&endYn=ALL&order=recommend')
+    driver.get('https://www.wadiz.kr/web/wreward/category/311?keyword=&endYn=ALL&order=recommend')
 
     scroll_downer(driver)
     paths = get_campaign_paths(driver)
