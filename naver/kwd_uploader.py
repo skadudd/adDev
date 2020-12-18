@@ -1,3 +1,4 @@
+# -*- conding: utf-8 -*-
 import time
 import random
 import requests
@@ -139,7 +140,7 @@ def adGroup_creator(f) :
     method = 'POST'
     payload = {
         'name': f +'_PC_'+ str(random.randrange(1000, 9999)), 
-        'nccCampaignId' : 'cmp-a001-01-000000003407888', 
+        'nccCampaignId' : 'cmp-a001-01-000000003645640', 
         'pcChannelId' : 'bsn-a001-00-000000004519293', 
         'mobileChannelId': 'bsn-a001-00-000000004519293',
         'userLock': True

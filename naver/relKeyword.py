@@ -17,8 +17,8 @@ SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
 today = date.today()
-montly_data = '/Users/maketing/adDev/NSA_rel_keyword/monthly_raw_data'
-request_query_path = '/Users/maketing/adDev/NSA_rel_keyword/'
+montly_data = '../NSA_rel_keyword/monthly_raw_data'
+request_query_path = '../NSA_rel_keyword/'
 
 def get_header(method, uri, api_key, secret_key, customer_id):
     timestamp = str(round(time.time() * 1000))
@@ -26,7 +26,7 @@ def get_header(method, uri, api_key, secret_key, customer_id):
     return {'Content-Type': 'application/json; charset=UTF-8', 'X-Timestamp': timestamp, 'X-API-KEY': API_KEY, 'X-Customer': str(CUSTOMER_ID), 'X-Signature': signature}
 
 def get_query():
-    df = pd.read_csv('/Users/maketing/adDev/NSA_rel_keyword/query.csv',header=None)
+    df = pd.read_csv('../NSA_rel_keyword/query.csv',header=None)
     return df
     # len_of_query = len(df.index)
     # print(df[0][1])  
