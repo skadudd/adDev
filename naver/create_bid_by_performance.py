@@ -1,3 +1,4 @@
+# -*- conding: utf-8 -*-
 import time
 import random
 import requests
@@ -15,9 +16,9 @@ import numpy
 import kwd_uploader
 
 today = date.today()
-monthly_performance_path = '/Users/maketing/adDev/kwd_bid_attributer'
-request_query_file = '/2020_11_최종키워드소스.csv'
-target_dir = '/Users/maketing/adDev/kwd_bid_attributer'
+monthly_performance_path = '../kwd_bid_attributer'
+request_query_file = '/3d프린팅.csv'
+target_dir = '../kwd_bid_attributer'
 
 BASE_URL = 'https://api.naver.com'
 API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
@@ -158,7 +159,7 @@ def get_best_performance_bid(list_of_df):
 def define_relation(x):
     r = define_regex(x)
     r2 = define_regex2(x)
-    if r != None and r2 == None :
+    if r ==True and r2 == None :
         return '고관련'
     else :
         return '저관련'
@@ -170,12 +171,19 @@ def define_popularity(x):
         return '비인기'
 #분류 1 정규식
 def define_regex(x):
-    regex = re.compile(r'(CNC|가공$|선반$|업체$|가공$|제작공장$|생산공장$|가공공장|견적$|업체$|파트너$|견적$|단가$|가공|부품|제조|밀링|선반|커팅|컷팅|생산|절삭|목업|제작$|가공단가$|임가공$|설계$)')
-    r = regex.search(x)
+    regex = re.compile(r'(프로토타입|제작|업체$|견적$|주문제작$|제작$|만들기$|3D프린팅$|3D출력$|3D프린트$|3D출력소$|3D출력대행$|시제품|제조$|)')
+    
+    print(x,'==',r)
     return r
+    # r = regex.match(x)
+    # print('r = ',r)
+    # if r == None:
+        # return False
+    # else :
+        # return True
 #분류 1 정규식
 def define_regex2(x):
-    regex = re.compile(r'(POM|메탈$|플라스틱$|실험|와이어|압출|드릴링|휴대폰|양두|황동제작|자동차|항공|비행기|선박|조명|용품$|장비$|선반$|가격$|설계$|탭$|용품$|장비$|부품$|기술$|종류$|머신$|기계$|산업$|GUR$|나일론$|테프론$|아세탈$|티타늄$|네이트$|MDF$)')
+    regex = re.compile(r'(지그|골프채|디자인소품|화장품용기|용기|플라스틱병|장난감|아이디어제품|시작품|프로토타입|IT|휴대폰|핸드폰|아이폰|갤럭시|아이패드|전자|^피규어|안경|애플워치|아이팟|악세서리|악세사리|가구|의자|커틀러리|주변기기|가습기|로봇|마우스|헤드셋|스피커|히터|다리미|면도기|무선|블루투스|레저|낚시|^용품|캠핑|취미|실험|마스크|자동차|산업용품|자재|고양|용인|창원|성남|부천|화성|남양|김해|평택|포항|시흥|파주|의정|김포|양산|원주|진주|세종|광명|아산|익산|춘천|경산|군포|군산|하남|여수|순천|경주|거제|목포|오산|이천|강릉|양주|충주|안성|구리|서산|서귀포|당진|안동|포천|의왕|광양|김천|제천|통영|논산|칠곡|사천|여주|공주|양평|속초|예산|주얼리|쥬얼리|패션|사업|행사|국비지원|POM|메탈$|플라스틱$|실험|와이어|압출|드릴링|휴대폰|양두|황동제작|자동차|항공|비행기|선박|조명|용품$|장비$|선반$|가격$|설계$|탭$|용품$|장비$|부품$|기술$|종류$|머신$|기계$|산업$|GUR$|나일론$|테프론$|아세탈$|티타늄$|네이트$|MDF$)')
     r = regex.search(x)
     return r
 
@@ -282,12 +290,7 @@ def init() :
     list_of_df = get_data(kwd_list,row_list)
     concated_df = concat_df(list_of_df)
     concated_df = concated_df.reset_index()
-    
-    ##print(len(list_of_df))
-    ##print(len(query))
-    # print(list_of_df)
-    #print(concated_df)
-    kwd_uploader.create_kwd_set(concated_df)
+    #kwd_uploader.create_kwd_set(concated_df)
     write_csv(concated_df,main_kwd)
     
 init()

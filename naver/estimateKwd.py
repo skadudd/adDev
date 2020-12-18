@@ -14,9 +14,9 @@ import signaturehelper
 
 today = date.today()
 
-monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '/Users/maketing/adDev/NSA_rel_keyword/자체제작.csv'
-device = 'MOBILE'
+monthly_performance_path = '../NSA_rel_keyword/monthly_performance_raw_data'
+query_path = '../NSA_rel_keyword/monthly_raw_data/202012_지그_키워드조합.csv'
+device = 'PC'
 
 
 def get_header(method, uri, api_key, secret_key, customer_id):
@@ -101,6 +101,7 @@ def concat_df(data):
 
 def merge_df(data):
     df_merged = reduce(lambda left,right: pd.merge(left,right,on=['keyword']), data)
+    df_merged = df_merged.drop_duplicates(['keyword'],keep='first')
     return df_merged
 
 def write_csv(data,kwd):

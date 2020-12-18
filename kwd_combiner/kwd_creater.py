@@ -10,8 +10,8 @@ import random
 from itertools import product
 
 today = date.today()
-query = '/Users/maketing/adDev/kwd_combiner/query/query6.csv'
-path = '/Users/maketing/adDev/kwd_combiner/created_query'
+query = '../kwd_combiner/query/query6.csv'
+path = '../kwd_combiner/created_query'
 
 def get_data():
     df = pd.read_csv(query)
@@ -90,7 +90,13 @@ def kwd_combine_setter(db):
     data_frame.columns = ['kwd']
     #print(data_frame)
     return data_frame
-    
+
+def filter_df(df):
+    patternDel = "(출력소대행$|출력소서비스$)"
+    filter = df['kwd'].str.contains(patternDel)
+    df = df[~filter]
+    return df
+
 def csv_writer(data,kwd):
     data.to_csv(Path(path, f'{today.year}{today.month}_{kwd}_키워드조합.csv',encoding='utf-8-sig'), index=False)
 
@@ -101,6 +107,7 @@ def init():
     kwd_combined = kwd_combine_setter(kwd_attributed)
     deleted_duplicates = delete_duplicate(kwd_combined)
     print(deleted_duplicates)
-    csv_writer(deleted_duplicates,kwd)
+    filtered_df = filter_df(deleted_duplicates)
+    csv_writer(filtered_df,kwd)
 
 init()
