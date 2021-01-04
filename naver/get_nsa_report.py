@@ -5,7 +5,7 @@ import random
 import json
 import glob
 import requests
-import openpyxl
+# import openpyxl
 import signaturehelper
 import pandas as pd
 from pandas import DataFrame
@@ -27,9 +27,9 @@ API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4
 SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
-input_file = '/Users/maketing/adDev/DB_for_GA_naver/'
-output_file = '/Users/maketing/adDev/DB_of_naver_combined/'
-campaignList = ['cmp-a001-01-000000003407889', 'cmp-a001-01-000000003407888']
+input_file = '../DB_for_GA_naver/'
+output_file = '../DB_of_naver_combined/'
+campaignList = ['cmp-a001-01-000000003407889', 'cmp-a001-01-000000003407888','cmp-a001-01-000000003645640','cmp-a001-01-000000003605317']
 
 #1. GET Summary Report per multiple entities 
 input_start_date = input('보고 시작 날짜 : ')
@@ -41,8 +41,9 @@ end_date = parse(input_end_date)
 
 #requested data to csv
 def data_to_csv(date) :
+    
     for v in campaignList :
-        print(v)
+        
         #stat_ids = []
         #stat_ids.append(v)
         uri = '/stats'
@@ -62,12 +63,18 @@ def data_to_csv(date) :
         #request API
         r = requests.get(BASE_URL + uri, params, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-        #print("response status_code = {}".format(r.status_code))
-        #print("response body = {}".format(r.json()))
+        # print("response status_code = {}".format(r.status_code))
+        # print("response body = {}".format(r.json()))
 
         json_data = json.loads(r.text)
+
+        if(len(json_data['data']) == 0) :
+            print(f'no data in {v} on {date}')
+            continue
+        
         data = json_data['data'][0]
-        print(data)
+        print(v)
+        print('campaign : ',data)
         striped_date = date.replace('-','')
         medium = 'cpc'
         source = 'search.naver.com'
@@ -76,14 +83,18 @@ def data_to_csv(date) :
         salesAmt = data['salesAmt']
         campaign = 0
         if(v == 'cmp-a001-01-000000003407889') :
-            campaign = 'NSA_contents'
-        else :
-            campaign = 'NSA'
+            campaign = 'NSA_cnc_contents'
+        elif(v == 'cmp-a001-01-000000003407888') :
+            campaign = 'NSA_cnc'
+        elif(v == 'cmp-a001-01-000000003645640') :
+            campaign = 'NSA_3dp'
+        elif(v == 'cmp-a001-01-000000003605317') :
+            campaign = 'NSA_Brand'
 
         newRow = [striped_date, medium, source, clkCnt, salesAmt, impCnt, campaign]
         ad_data = {'ga:date':[striped_date], 'ga:medium':[medium], 'ga:source':[source], 'ga:adClicks':[clkCnt], 'ga:adCost':[salesAmt], 'ga:impressions':[impCnt], 'ga:campaign':[campaign] }
         df = pd.DataFrame(data=ad_data)
-
+        
         df.to_csv(Path(input_file, f'{striped_date} {source} {campaign}.csv'), index=False)
 
 def merge_csv() : 
