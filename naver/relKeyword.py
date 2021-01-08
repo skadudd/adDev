@@ -63,8 +63,9 @@ def concat_csv(db):
     for i in range(len(db)):
         frames.append(db[i])
     result = pd.concat(frames)
+    result = result.drop_duplicates(['연관 검색어'],keep='first')
     write_csv(result,'merged')
-    # 
+
     return
 
 def init():
