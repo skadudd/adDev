@@ -22,21 +22,6 @@ API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4
 SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
-# a = {'keyword': '기계가공', 'useGroupBidAmt': False, 'bidAmt': 2300, 'links': {'pc': {'final': 'https://beta.creatable.com'}, 'mobile': {'final': 'https://beta.creatable.com'}}}
-# print(json.dumps(a))
-# for v in a:
-    
-#     n = 3
-#     a[v] = [a[v][i * n:(i + 1) * n] for i in range((len(a[v]) + n - 1) // n )] 
-
-# for v in a:
-#     for s in a[v]:
-#         print(v)
-#         print(s)
-
-# b = 'aaa'
-# a[b].append(5)
-# print(a[b])
 a = {'a':0, 'b':0}
 a['a'] = 1
 a['a'] = 2
@@ -140,7 +125,7 @@ def adGroup_creator(f) :
     method = 'POST'
     payload = {
         'name': f +'_PC_'+ str(random.randrange(1000, 9999)), 
-        'nccCampaignId' : 'cmp-a001-01-000000003645640', 
+        'nccCampaignId' : 'cmp-a001-01-000000003711121', 
         'pcChannelId' : 'bsn-a001-00-000000004519293', 
         'mobileChannelId': 'bsn-a001-00-000000004519293',
         'userLock': True

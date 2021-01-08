@@ -1,4 +1,6 @@
-# -*- conding: utf-8 -*-
+#! /Users/kim/python
+# -*- coding: utf-8 -*-
+
 import time
 import random
 import requests
@@ -17,7 +19,7 @@ import kwd_uploader
 
 today = date.today()
 monthly_performance_path = '../kwd_bid_attributer'
-request_query_file = '/3d프린팅.csv'
+request_query_file = '/금형2.csv'
 target_dir = '../kwd_bid_attributer'
 
 BASE_URL = 'https://api.naver.com'
@@ -33,7 +35,7 @@ def get_header(method, uri, api_key, secret_key, customer_id):
 
 
 def get_query():
-    df = pd.read_csv(monthly_performance_path + request_query_file ,header=None)
+    df = pd.read_csv(monthly_performance_path + request_query_file ,header=None,encoding='utf-8')
     return df
 
 def get_rows(query):
@@ -171,19 +173,20 @@ def define_popularity(x):
         return '비인기'
 #분류 1 정규식
 def define_regex(x):
-    regex = re.compile(r'(프로토타입|제작|업체$|견적$|주문제작$|제작$|만들기$|3D프린팅$|3D출력$|3D프린트$|3D출력소$|3D출력대행$|시제품|제조$|)')
-    
+    regex = re.compile(r'(플라스틱성형|사출성형|금형사출|사출공장|금형$|공장$|제조$|업체$|용역$|의뢰$|생산$|제작$|사출$)')
+    r = regex.search(x)
     print(x,'==',r)
-    return r
+    # return r
+
     # r = regex.match(x)
     # print('r = ',r)
-    # if r == None:
-        # return False
-    # else :
-        # return True
+    if r == None:
+        return False
+    else :
+        return True
 #분류 1 정규식
 def define_regex2(x):
-    regex = re.compile(r'(지그|골프채|디자인소품|화장품용기|용기|플라스틱병|장난감|아이디어제품|시작품|프로토타입|IT|휴대폰|핸드폰|아이폰|갤럭시|아이패드|전자|^피규어|안경|애플워치|아이팟|악세서리|악세사리|가구|의자|커틀러리|주변기기|가습기|로봇|마우스|헤드셋|스피커|히터|다리미|면도기|무선|블루투스|레저|낚시|^용품|캠핑|취미|실험|마스크|자동차|산업용품|자재|고양|용인|창원|성남|부천|화성|남양|김해|평택|포항|시흥|파주|의정|김포|양산|원주|진주|세종|광명|아산|익산|춘천|경산|군포|군산|하남|여수|순천|경주|거제|목포|오산|이천|강릉|양주|충주|안성|구리|서산|서귀포|당진|안동|포천|의왕|광양|김천|제천|통영|논산|칠곡|사천|여주|공주|양평|속초|예산|주얼리|쥬얼리|패션|사업|행사|국비지원|POM|메탈$|플라스틱$|실험|와이어|압출|드릴링|휴대폰|양두|황동제작|자동차|항공|비행기|선박|조명|용품$|장비$|선반$|가격$|설계$|탭$|용품$|장비$|부품$|기술$|종류$|머신$|기계$|산업$|GUR$|나일론$|테프론$|아세탈$|티타늄$|네이트$|MDF$)')
+    regex = re.compile(r'(화분|피규어|가공|사출기|캐드|CAD|^디비디|제품디자인업체|사출|지그|골프채|디자인소품|화장품용기|용기|플라스틱병|장난감|아이디어제품|시작품|프로토타입|IT|휴대폰|핸드폰|아이폰|갤럭시|아이패드|전자|^피규어|안경|애플워치|아이팟|악세서리|악세사리|가구|의자|커틀러리|주변기기|가습기|로봇|마우스|헤드셋|스피커|히터|다리미|면도기|무선|블루투스|레저|낚시|^용품|캠핑|취미|실험|마스크|자동차|산업용품|자재|고양|용인|창원|성남|부천|화성|남양|김해|평택|포항|시흥|파주|의정|김포|양산|원주|진주|세종|광명|아산|익산|춘천|경산|군포|군산|하남|여수|순천|경주|거제|목포|오산|이천|강릉|양주|충주|안성|구리|서산|서귀포|당진|안동|포천|의왕|광양|김천|제천|통영|논산|칠곡|사천|여주|공주|양평|속초|예산|주얼리|쥬얼리|패션|사업|행사|국비지원|POM|메탈$|플라스틱$|실험|와이어|압출|드릴링|휴대폰|양두|황동제작|자동차|항공|비행기|선박|조명|용품$|장비$|선반$|가격$|설계$|탭$|용품$|장비$|부품$|기술$|종류$|머신$|기계$|산업$|GUR$|나일론$|테프론$|아세탈$|티타늄$|네이트$|MDF$)')
     r = regex.search(x)
     return r
 
@@ -224,10 +227,22 @@ def do_math_for_best_bid(df,kwd_r_score,kwd_p_score):
             best_bid = df[df['rank']==10]
             best_bid['attr'] = '고관련비인기'
             return best_bid
-        else :
-            best_bid = df[df['rank']==1]
+        #노출이 1 이상인 값이 전혀 없다면, 10위에 비딩하라
+        elif len(df[df['impressions']<=1]) == 10 :
+            best_bid = df[df['rank']==10]
             best_bid['attr'] = '고관련비인기'
             return best_bid
+        #노출이 0이 아닌 값들 중 가장 저렴한 값에 비딩하라.
+        else :
+            df_not_zero = df[df['impressions'] != 0]
+            min_bid = df_not_zero[df_not_zero['bid']==df_not_zero['bid'].min()]
+            best_bid = min_bid[min_bid['rank']==min_bid['rank'].max()]
+            best_bid['attr'] = '고관련비인기'
+            return best_bid
+        # else :
+        #     best_bid = df[df['rank']==1]
+        #     best_bid['attr'] = '고관련비인기'
+        #     return best_bid
     #저관련 인기
     if kwd_r_score == '저관련' and kwd_p_score == '인기' :
         #print(df)
@@ -250,7 +265,6 @@ def do_math_for_best_bid(df,kwd_r_score,kwd_p_score):
                 best_bid = df[df['rank']==df_momentom['rank'].values[0] + 1]
                 best_bid['attr'] = '저관련인기'
                 return best_bid
-
             else : 
                 best_bid = df_momentom
                 best_bid['attr'] = '저관련인기'
@@ -290,7 +304,8 @@ def init() :
     list_of_df = get_data(kwd_list,row_list)
     concated_df = concat_df(list_of_df)
     concated_df = concated_df.reset_index()
-    #kwd_uploader.create_kwd_set(concated_df)
-    write_csv(concated_df,main_kwd)
+    dropped_df = concated_df.drop_duplicates(['keyword'], keep='first')
+    kwd_uploader.create_kwd_set(dropped_df)
+    write_csv(dropped_df,main_kwd)
     
 init()

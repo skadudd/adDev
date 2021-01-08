@@ -1,11 +1,13 @@
 import time
 import random
 import requests
-
 import signaturehelper
-
 import pandas as pd
 from pandas import DataFrame
+
+# CAPA는 무료! 대기업 {keyword:제조} 파트너들의 견적을 받고 비교해 보세요.
+# 여러 업체의 {keyword:제조} 가공 견적, capa에서 한번에 받아보고 비교하세요
+# {keyword:제조} 업체 찾지말고, CAPA에서 한번에 받아보고 비교하세요!
 
 def get_header(method, uri, api_key, secret_key, customer_id):
     timestamp = str(round(time.time() * 1000))
@@ -19,27 +21,11 @@ SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
 group_ids = [
-'grp-a001-01-000000018624529',
-'grp-a001-01-000000018624551',
-'grp-a001-01-000000018624538',
-'grp-a001-01-000000018624548',
-'grp-a001-01-000000018624554',
-'grp-a001-01-000000018624565',
-'grp-a001-01-000000018624539',
-'grp-a001-01-000000018624556',
-'grp-a001-01-000000018624516',
-'grp-a001-01-000000018624546',
-'grp-a001-01-000000018624526',
-'grp-a001-01-000000018624560',
-'grp-a001-01-000000018624520',
-'grp-a001-01-000000018624515',
-'grp-a001-01-000000018624629',
-'grp-a001-01-000000018624580',
-'grp-a001-01-000000018624624',
-'grp-a001-01-000000018624594',
-'grp-a001-01-000000018624569',
-'grp-a001-01-000000018624607',
-'grp-a001-01-000000018624568']
+    'grp-a001-01-000000019177972',
+    'grp-a001-01-000000019177971',
+    'grp-a001-01-000000019177974',
+    'grp-a001-01-000000019177973'
+]
 for v in group_ids:
     print(v)
 
@@ -51,7 +37,7 @@ for v in group_ids :
     "pc": {"final": "https://capa.ai"},
     "mobile": {"final": "https://capa.ai"},
     "headline": "제조 견적비교 서비스, 카파",
-    "description": "CAPA는 무료! 대기업 {keyword:제조} 파트너들의 견적을 받고 비교해 보세요."},
+    "description": "여러 업체의 {keyword:제조} 가공 견적, capa에서 한번에 받아보고 비교하세요"},
     "type" : 'TEXT_45',
     "nccAdgroupId" : v
     }

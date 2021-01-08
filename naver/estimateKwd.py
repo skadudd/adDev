@@ -15,7 +15,7 @@ import signaturehelper
 today = date.today()
 
 monthly_performance_path = '../NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '../NSA_rel_keyword/monthly_raw_data/202012_지그_키워드조합.csv'
+query_path = '../NSA_rel_keyword/monthly_raw_data/금형키워드.csv'
 device = 'PC'
 
 
