@@ -62,14 +62,14 @@ CUSTOMER_ID = '1158940'
 
 # 1. GET adgroup Usage Sample
 
-uri = '/ncc/ads/nad-a001-01-000000114741459'
-method = 'GET'
-r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# uri = '/ncc/ads/nad-a001-01-000000114741459'
+# method = 'GET'
+# r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-print("response status_code = {}".format(r.status_code))
-print("response body = {}".format(r.json()))
-target_adgroup = r.json()
-print(target_adgroup)
+# print("response status_code = {}".format(r.status_code))
+# print("response body = {}".format(r.json()))
+# target_adgroup = r.json()
+# print(target_adgroup)
 
 # 2. CREATE adgroup Usage Sample
 
@@ -120,20 +120,25 @@ print(target_adgroup)
 
 # uri = '/ncc/keywords'
 # method = 'GET'
-# r = requests.get(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018613603'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# r = requests.get(BASE_URL + uri, params={'nccAdgroupId': 'grp-a001-01-000000018624529'}, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
 # print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(len(r.json())))
+# # print("response body = {}".format(r.json()))
+# r_data = r.json()
+# i = 0
+# for v in range(len(r_data)):
+#     i += 1
+#     print(i,'',r_data[v]['nccKeywordId'])
 
 # # 3. UPDATE AdKeyword
 
-# uri = '/ncc/keywords'
-# method = 'PUT'
-# created_adkeyword['userLock'] = 0
-# r = requests.put(BASE_URL + uri, params={'fields': 'userLock'}, json=[created_adkeyword], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+uri = '/ncc/keywords'
+method = 'PUT'
+created_adkeyword['userLock'] = 0
+r = requests.put(BASE_URL + uri, params={'fields': 'userLock'}, json=[created_adkeyword], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-# print("response status_code = {}".format(r.status_code))
-# print("response body = {}".format(r.json()))
+print("response status_code = {}".format(r.status_code))
+print("response body = {}".format(r.json()))
 
 
 # # 4. GET and UPDATE AdKeyword (BidAmt)
