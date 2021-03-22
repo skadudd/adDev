@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
-import openpyxl
+# import openpyxl
 from nltk.corpus import stopwords 
 from nltk.tokenize import word_tokenize
 
@@ -10,7 +10,7 @@ result = []
 stopwords_list = open('stopwords.csv')
 stopwords_list = stopwords_list.read()
 
-text = open('/Users/maketing/content_growth_creatable/test_files/ncr_seo_ing.md','r')
+text = open('sheet.md','r')
 content = text.read().split()
 
 for w in content :

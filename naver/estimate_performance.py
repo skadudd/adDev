@@ -12,10 +12,10 @@ from functools import reduce
 import signaturehelper
 
 today = date.today()
-monthly_performance_path = '/Users/maketing/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-request_query_file = '/202012_자체제작_구좌순위별_비딩가.csv'
-target_dir = '/Users/maketing/adDev/NSA_rel_keyword/estimate_performance'
-device = 'MOBILE'
+monthly_performance_path = '/Users/Kim/adDev/NSA_rel_keyword/monthly_performance_raw_data'
+request_query_file = '/20212_PC_금속절단_구좌순위별_비딩가.csv'
+target_dir = '/Users/Kim/adDev/NSA_rel_keyword/estimate_performance'
+device = 'PC'
 
 BASE_URL = 'https://api.naver.com'
 API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
@@ -87,7 +87,7 @@ def concat_df(data):
 
 def write_csv(concated_df,kwd):
     print('here')
-    concated_df.to_csv(Path(target_dir, f'{today.year}{today.month}_{kwd}_구좌순위별_예상실적.csv'), index=False)
+    concated_df.to_csv(Path(target_dir, f'{today.year}{today.month}_{device}_{kwd}_구좌순위별_예상실적.csv'), index=False)
     print(concated_df)
 
 def init() :

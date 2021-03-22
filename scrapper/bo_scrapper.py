@@ -5,6 +5,7 @@ from selenium import webdriver
 from pathlib import Path
 import pandas as pd
 
+
 def scroll_downer(driver):
     last_height = 0
     SCROLL_PAUSE_TIME = 3
@@ -30,19 +31,35 @@ def scroll_downer(driver):
 
 def get_infos(url,driver):
     print('scrapping...',url)
-    driver.get(url)
     html = driver.page_source
     print(html)
     soup = BeautifulSoup(html,'html.parser')
     test = soup.select('div.MuiPaper-root MuiTableContainer-root MuiPaper-elevation1 MuiPaper-rounded')
     print(test)
 
+def access_token(url_login,driver):
+    driver.get(url_login)
+    driver.find_element_by_xpath('//*[@id="root"]/div/main/div[2]/form/div/div/input').send_keys('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwczovL2hhc3VyYS5pby9qd3QvY2xhaW1zIjp7IngtaGFzdXJhLWFsbG93ZWQtcm9sZXMiOlsiY3JtIl0sIngtaGFzdXJhLWRlZmF1bHQtcm9sZSI6ImNybSJ9LCJpYXQiOjE2MDc2Njg0MDksImlzcyI6ImNyZWF0YWJsZS1zY3JpcHQtam9obndvb2sifQ.48UO-qxGNjh28BerWdoPrZHfidxIGUne2_qUIeuD1M0')
+    driver.implicitly_wait(3)
+    driver.find_element_by_xpath('//*[@id="root"]/div/main/div[2]/form/button').click()
+    driver.find_element_by_xpath('//*[@id="root"]/div/header/div/button/span[1]').click()
+    time.sleep(1)
+    driver.find_element_by_xpath('//*[@id="root"]/div/div/div/ul/div[3]').click()
+    time.sleep(1)
+    html = driver.page_source
+    soup = BeautifulSoup(html,'html.parser')
+    # print(soup.prettify())
+    test = soup.select('div.MuiPaper-root MuiTableContainer-root MuiPaper-elevation1 MuiPaper-rounded')
+    print(test)
+
 def init():
+    url_login = 'https://bo.capa.ai/login'
     url = 'https://bo.capa.ai/client'
     driver = webdriver.Chrome('/Users/kim/Downloads/chromedriver')
-    driver.implicitly_wait(3)
-    scroll_downer(driver)
-    driver.get(url)
-    get_infos(url,driver)
+    driver.implicitly_wait(1)
+    access_token(url_login,driver)
+
+    # scroll_downer(driver)
+    # get_infos(url,driver)
 
 init()

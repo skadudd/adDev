@@ -53,9 +53,10 @@ for v in group_list:
     print("response status_code = {}".format(r.status_code))
     #print("response body = {}".format(r.json()))
     kwds = r.json()
-    
+    print(kwds)
     df = pd.DataFrame.from_dict(kwds)
     db.append(df)
     
 result = pd.concat(db)
-result .to_csv(Path(path, f'{today.year}_{today.month}_기존키워드.csv'), index=False)
+print(result)
+# result.to_csv(Path(path, f'{today.year}_{today.month}_기존키워드.csv'), index=False)
