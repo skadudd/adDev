@@ -1,0 +1,10 @@
+ga:date,ga:medium,ga:source,ga:adClicks,ga:adCost,ga:impressions,ga:campaign
+20210103,cpc,search.naver.com,32,55132,54505,NSA_3dp
+20210101,cpc,search.naver.com,33,88341,38573,NSA_cnc
+20210102,cpc,search.naver.com,55,96514,38572,NSA_cnc
+20210101,cpc,search.naver.com,0,0,364,NSA_Brand
+20210103,cpc,search.naver.com,1,77,323,NSA_Brand
+20210103,cpc,search.naver.com,58,82489,40937,NSA_cnc
+20210101,cpc,search.naver.com,13,28424,58397,NSA_3dp
+20210102,cpc,search.naver.com,0,0,315,NSA_Brand
+20210102,cpc,search.naver.com,18,38511,54623,NSA_3dp

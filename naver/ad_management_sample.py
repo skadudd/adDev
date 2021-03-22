@@ -18,7 +18,11 @@ API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4
 SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
-
+uri = '/ncc/keywords'
+# uri = '/ncc/adgroups/grp-a001-01-000000018624529/restricted-keywords?type&#x3D;KEYWORD_PLUS_RESTRICT'
+method = 'GET'
+r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+print(r.json())
 
 # ManageCustomerLink Usage Sample
 
@@ -132,13 +136,13 @@ CUSTOMER_ID = '1158940'
 
 # # 3. UPDATE AdKeyword
 
-uri = '/ncc/keywords'
-method = 'PUT'
-created_adkeyword['userLock'] = 0
-r = requests.put(BASE_URL + uri, params={'fields': 'userLock'}, json=[created_adkeyword], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# uri = '/ncc/keywords'
+# method = 'PUT'
+# created_adkeyword['userLock'] = 0
+# r = requests.put(BASE_URL + uri, params={'fields': 'userLock'}, json=[created_adkeyword], headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
 
-print("response status_code = {}".format(r.status_code))
-print("response body = {}".format(r.json()))
+# print("response status_code = {}".format(r.status_code))
+# print("response body = {}".format(r.json()))
 
 
 # # 4. GET and UPDATE AdKeyword (BidAmt)

@@ -46,8 +46,9 @@ def get_keyword():
     r_data = r.json()
     return r_data
 
-def set_data_frame(data)
+def set_data_frame(data) :
     data = pd.DataFrame(r_data)
+    print(data)
 
 def init():
     data = get_keyword()

@@ -15,7 +15,7 @@ import signaturehelper
 today = date.today()
 
 monthly_performance_path = '../NSA_rel_keyword/monthly_performance_raw_data'
-query_path = '../NSA_rel_keyword/monthly_raw_data/금형키워드.csv'
+query_path = '../NSA_rel_keyword/monthly_raw_data/2021_2_판금.csv'
 device = 'PC'
 
 
@@ -106,7 +106,7 @@ def merge_df(data):
 
 def write_csv(data,kwd):
     print('write_csv')
-    data.to_csv(Path(monthly_performance_path, f'{today.year}{today.month}_{kwd}_구좌순위별_비딩가.csv'), index=False)
+    data.to_csv(Path(monthly_performance_path, f'{today.year}{today.month}_{device}_{kwd}_구좌순위별_비딩가.csv'), index=False)
 
 def init() :
     DB = []
