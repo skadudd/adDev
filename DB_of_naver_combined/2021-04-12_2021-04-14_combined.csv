@@ -1,0 +1,16 @@
+ga:date,ga:medium,ga:source,ga:adClicks,ga:adCost,ga:impressions,ga:campaign
+20210413,cpc,search.naver.com,24,47718,76708,NSA_DSN
+20210413,cpc,search.naver.com,15,40590,4911,NSA_cnc
+20210413,cpc,search.naver.com,12,30503,1696,NSA_INJ
+20210412,cpc,search.naver.com,15,71467,4144,NSA_3dp
+20210412,cpc,search.naver.com,36,25630,8028,NSA_SHT
+20210413,cpc,search.naver.com,8,17336,3745,NSA_3dp
+20210412,cpc,search.naver.com,1,77,211,NSA_Brand
+20210413,cpc,search.naver.com,15,21978,1633,NSA_SHT
+20210414,cpc,search.naver.com,3,220,208,NSA_Brand
+20210412,cpc,search.naver.com,33,70807,9415,NSA_cnc
+20210412,cpc,search.naver.com,21,51788,42548,NSA_DSN
+20210412,cpc,search.naver.com,22,45804,2794,NSA_INJ
+20210414,cpc,search.naver.com,0,0,2,NSA_DSN
+20210414,cpc,search.naver.com,0,0,0,NSA_INJ
+20210413,cpc,search.naver.com,1,77,205,NSA_Brand

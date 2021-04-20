@@ -13,7 +13,7 @@ import signaturehelper
 
 today = date.today()
 monthly_performance_path = '/Users/Kim/adDev/NSA_rel_keyword/monthly_performance_raw_data'
-request_query_file = '/20212_PC_금속절단_구좌순위별_비딩가.csv'
+request_query_file = '/20213_PC_캐드_구좌순위별_비딩가.csv'
 target_dir = '/Users/Kim/adDev/NSA_rel_keyword/estimate_performance'
 device = 'PC'
 

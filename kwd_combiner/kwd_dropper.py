@@ -13,11 +13,11 @@ from pandas import DataFrame
 import random
 from itertools import product
 
-path = '/Users/kim/adDev/kwd_combiner/query/attr'
+path = '/Users/kim/'
 today = date.today()
-df = pd.read_csv('/Users/kim/adDev/kwd_combiner/query/2021_2_필터된키워드3.csv')
-#kwd = df['연관 검색어'][0]
-
+df = pd.read_csv('/Users/kim/adDev/NSA_rel_keyword/design_query.csv')
+kwd = df['연관 검색어'][0]
+print(df)
 input_file = "../query/attr"
 
 # def merge_csv() : 
@@ -52,9 +52,10 @@ def regex_do(df):
 
 # data_combine = merge_csv()
 # print(data_combine)
-regexed = regex_do(df)
-data_combine2 = regexed.drop_duplicates(['연관 검색어'],keep='first')
+# regexed = regex_do(df)
+data_combine2 = df.drop_duplicates(['연관 검색어'],keep='first')
+print(data_combine2)
 #print(len(df2))
-print(len(data_combine2))
+# print(len(data_combine2))
 # regexed.to_csv(Path(path, f'{today.year}_{today.month}_필터된키워드2.csv'), index=False)
 data_combine2.to_csv(Path(path, f'{today.year}_{today.month}_필터된키워드2.csv'), index=False)

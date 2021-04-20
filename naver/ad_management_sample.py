@@ -1,7 +1,7 @@
 import time
 import random
 import requests
-
+import json
 import signaturehelper
 
 import pandas as pd
@@ -18,11 +18,11 @@ API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4
 SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
-uri = '/ncc/keywords'
-# uri = '/ncc/adgroups/grp-a001-01-000000018624529/restricted-keywords?type&#x3D;KEYWORD_PLUS_RESTRICT'
-method = 'GET'
-r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
-print(r.json())
+# uri = '/ncc/keywords'
+# # uri = '/ncc/adgroups/grp-a001-01-000000018624529/restricted-keywords?type&#x3D;KEYWORD_PLUS_RESTRICT'
+# method = 'GET'
+# r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+# print(r.json())
 
 # ManageCustomerLink Usage Sample
 
@@ -228,6 +228,14 @@ print(r.json())
 # Stat Usage Sample
 
 # 1. GET Summary Report per multiple entities 
+
+uri = '/stat-reports'
+method = 'GET'
+r = requests.get(BASE_URL + uri, headers=get_header(method, uri, API_KEY, SECRET_KEY, CUSTOMER_ID))
+data = json.loads(r)
+print(data)
+dataFrame = pd.DataFrame.from_dict(data)
+print(dataFrame)
 
 # uri = '/stats'
 # method = 'GET'

@@ -19,7 +19,7 @@ import kwd_uploader
 
 today = date.today()
 monthly_performance_path = '../kwd_bid_attributer'
-request_query_file = '/20212_PC_금속절단_구좌순위별_비딩가.csv'
+request_query_file = '/20213_PC_캐드_구좌순위별_비딩가.csv'
 target_dir = '../kwd_bid_attributer'
 
 BASE_URL = 'https://api.naver.com'
@@ -167,13 +167,13 @@ def define_relation(x):
         return '저관련'
 
 def define_popularity(x):
-    if x > 50 :
+    if x > 1000 :
         return '인기'
     else :
         return '비인기'
 #분류 1 정규식
 def define_regex(x):
-    regex = re.compile(r'(절단|워터젯|레이저|레이져|가공$|벤딩$|밴딩$|절곡$|샤링$|판금|커팅|절단)')
+    regex = re.compile(r'(설계|디자인|도면|기구|제조|제작|생산|모델링|개발|설계|DESIGN)')
     r = regex.search(x)
     print(x,'==',r)
     # return r
@@ -186,7 +186,7 @@ def define_regex(x):
         return True
 #분류 1 정규식
 def define_regex2(x):
-    regex = re.compile(r'(^대전|^울산|^구로|^서울|^구미|[a-z]|절단기|기$|벤더$|기계$|^목|화분|피규어|가공|사출기|캐드|CAD|^디비디|제품디자인업체|사출|지그|골프채|디자인소품|화장품용기|용기|플라스틱병|장난감|아이디어제품|시작품|프로토타입|IT|휴대폰|핸드폰|아이폰|갤럭시|아이패드|전자|^피규어|안경|애플워치|아이팟|악세서리|악세사리|가구|의자|커틀러리|주변기기|가습기|로봇|마우스|헤드셋|스피커|히터|다리미|면도기|무선|블루투스|레저|낚시|^용품|캠핑|취미|실험|마스크|자동차|산업용품|자재|고양|용인|창원|성남|부천|화성|남양|김해|평택|포항|시흥|파주|의정|김포|양산|원주|진주|세종|광명|아산|익산|춘천|경산|군포|군산|하남|여수|순천|경주|거제|목포|오산|이천|강릉|양주|충주|안성|구리|서산|서귀포|당진|안동|포천|의왕|광양|김천|제천|통영|논산|칠곡|사천|여주|공주|양평|속초|예산|주얼리|쥬얼리|패션|사업|행사|국비지원|POM|메탈$|플라스틱$|실험|와이어|압출|드릴링|휴대폰|양두|황동제작|자동차|항공|비행기|선박|조명|용품$|장비$|선반$|가격$|설계$|탭$|용품$|장비$|부품$|기술$|종류$|머신$|기계$|산업$|GUR$|나일론$|테프론$|아세탈$|티타늄$|네이트$|MDF$)')
+    regex = re.compile(r'(DXF)')
     r = regex.search(x)
     return r
 
@@ -204,8 +204,8 @@ def do_math_for_best_bid(df,kwd_r_score,kwd_p_score):
         # elif len(max_click_biddings) >= 2 :
             # best_bid = max_click_biddings[max_click_biddings['bid']==max_click_biddings['bid'].min()]
             # print(best_bid)
-        #최대 클릭수가 0이 아니며, 최대 비딩가가 4000원 미만일 시, 클릭 변동폭이 가장 높은 구좌 중, 비딩가가 가장 낮은 구좌에 비딩하라.
-        elif df['clicks'].max() != 0 and df['bid'].max() < 4000 :
+        #최대 클릭수가 0이 아니며, 최대 비딩가가 10000원 미만일 시, 클릭 변동폭이 가장 높은 구좌 중, 비딩가가 가장 낮은 구좌에 비딩하라.
+        elif df['clicks'].max() != 0 and df['bid'].max() < 10000 :
             max_click_cal = df[df['clicks_cal']==df['clicks_cal'].max()]
             best_bid = max_click_cal[max_click_cal['bid']==max_click_cal['bid'].min()]
             best_bid['attr'] = '고관련인기'
