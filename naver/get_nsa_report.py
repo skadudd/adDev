@@ -30,7 +30,8 @@ campaignList = ['cmp-a001-01-000000003407889',
                 'cmp-a001-01-000000003707625',
                 'cmp-a001-01-000000003865318',
                 'cmp-a001-01-000000003865902',
-                'cmp-a001-04-000000003747667'
+                'cmp-a001-04-000000003747667',
+                'cmp-a001-01-000000003991616'
                 ]
 
 #1. GET Summary Report per multiple entities 
@@ -103,6 +104,8 @@ def data_to_csv(date):
             campaign = 'NSA_INJ_Mobile'
         elif(v == 'cmp-a001-01-000000003865318') :
             campaign = 'NSA_SHT'
+        elif(v == 'cmp-a001-01-000000003991616') :
+            campaign = "NSA_DSN"
         elif(v == 'cmp-a001-01-000000003865902') :
             campaign = 'NSA_SHT_Mobile'
         elif(v == 'cmp-a001-04-000000003747667') :

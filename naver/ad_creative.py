@@ -21,10 +21,10 @@ SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
 CUSTOMER_ID = '1158940'
 
 group_ids = [
-    # 'grp-a001-01-000000019954761',
-    # 'grp-a001-01-000000019954760',
-    # 'grp-a001-01-000000019954768',
-    'grp-a001-01-000000019955378'
+    "grp-a001-01-000000020586373",
+    "grp-a001-01-000000020586372",
+    "grp-a001-01-000000020586375",
+    "grp-a001-01-000000020586374"
 ]
 for v in group_ids:
     print(v)
@@ -37,7 +37,7 @@ for v in group_ids :
     "pc": {"final": "https://capa.ai"},
     "mobile": {"final": "https://capa.ai"},
     "headline": "제조 견적비교 서비스, 카파",
-    "description": "{keyword:제조} 업체 찾지말고, CAPA에서 한번에 받아보고 비교하세요!"},
+    "description": "CAPA는 무료! 대기업 {keyword:제조} 파트너들의 견적을 받고 비교해 보세요."},
     "type" : 'TEXT_45',
     "nccAdgroupId" : v
     }

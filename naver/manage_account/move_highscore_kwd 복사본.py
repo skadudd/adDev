@@ -110,7 +110,7 @@ def get_stat(keyword_id) :
     
     # for v in datas :
     #     ccnt_num += v['ccnt']
-    ret = next((index for (index, item) in enumerate(datas) if item['ccnt'] > 1), None)
+    ret = next((index for (index, item) in enumerate(datas) if item['ccnt'] > 0), None)
     if ret != None :
         sum_ccnt = []
         for v in datas :
