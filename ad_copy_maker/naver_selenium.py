@@ -40,7 +40,7 @@ def scrap_web(url,search_param):
     
     while True:
         execute_script(do_scroll,driver)
-        driver.implicitly_wait(1)
+        driver.implicitly_wait(0.1)
 
         i += 1
         print(i)
@@ -75,7 +75,7 @@ def parse_text(soup):
     return df
 
 def export_file(df,search_param):
-    writer = pd.ExcelWriter(f"/Users/young/git/project/export/{search_param}_{datetime.datetime.now()}.xlsx", engine="xlsxwriter")
+    writer = pd.ExcelWriter(f"/Users/young/git/project/export/{search_param}_{datetime.datetime.now().strftime('%Y-%m-%d')}.xlsx", engine="xlsxwriter")
     df.to_excel(writer,sheet_name='Sheet1')
     workbook = writer.book
     worksheet = writer.sheets["Sheet1"]
