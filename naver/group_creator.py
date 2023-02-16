@@ -17,8 +17,8 @@ def get_header(method, uri, api_key, secret_key, customer_id):
     return {'Content-Type': 'application/json; charset=UTF-8', 'X-Timestamp': timestamp, 'X-API-KEY': API_KEY, 'X-Customer': str(CUSTOMER_ID), 'X-Signature': signature}
 
 BASE_URL = 'https://api.naver.com'
-API_KEY = '0100000000adc996fd9c6660f2496ec0f64a1ce8c5688874b0d0f5074d8f98b0fadd4793b9'
-SECRET_KEY = 'AQAAAACtyZb9nGZg8kluwPZKHOjFpb6b54doFnHnBVokUWhNFw=='
+API_KEY = ''
+SECRET_KEY = ''
 CUSTOMER_ID = '1158940'
 campaign = {
     "cnc" : "cmp-a001-01-000000003407888",
