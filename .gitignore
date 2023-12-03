@@ -4,3 +4,5 @@ chromedriver
 kaggle/code_copy/
 *.png
 .Ds_Store
+*.pdf
+*.jpeg
